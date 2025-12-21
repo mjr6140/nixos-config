@@ -55,10 +55,10 @@
 
   programs.git = {
     enable = true;
-    userName = "Matt Rickard";
-    userEmail = "mjr6140@gmail.com";
     lfs.enable = true;
-    extraConfig = {
+    settings = {
+      user.name = "Matt Rickard";
+      user.email = "mjr6140@gmail.com";
       filter."lfs" = {
         smudge = "git-lfs smudge -- %f";
         process = "git-lfs filter-process";

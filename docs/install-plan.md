@@ -112,6 +112,30 @@ sudo nixos-rebuild switch --flake .#nixos-desktop
 
 ---
 
+## Phase 5: Testing in a VM (Recommended)
+Before installing on physical hardware, you can test this configuration in a KVM virtual machine.
+
+### 1. Requirements
+- Existing Linux host with `virt-manager` and `libvirtd` enabled.
+- The repository cloned to the host.
+
+### 2. Configure VM
+In `virt-manager`, create a new VM:
+- **CPU**: At least 2 cores.
+- **Memory**: At least 4GB.
+- **Storage**: At least 20GB (Btrfs subvolumes will be created).
+- **Network**: Default NAT.
+- **Display**: Spice with QXL or Virtio.
+
+### 3. Run Install
+Boot the VM with a NixOS ISO and run:
+```bash
+# Inside the VM
+sudo nixos-install --flake .#nixos-vm
+```
+
+---
+
 ## Appendix: Software Manifest (Verification Checklist)
 
 | Requirement | Scope | Note |

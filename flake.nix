@@ -17,7 +17,6 @@
     };
     cachyos-kernel = {
       url = "github:drakon64/nixos-cachyos-kernel";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
@@ -27,7 +26,25 @@
       specialArgs = { inherit inputs; };
       modules = [
         ./hosts/nixos-desktop/configuration.nix
-        cachyos-kernel.nixosModules.cachyos-kernel
+        inputs.cachyos-kernel.nixosModules.default
+        ({ ... }: {
+          nixpkgs.overlays = [ inputs.cachyos-kernel.overlays.default ];
+        })
+        home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.matt = import ./home/matt/home.nix;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+        }
+        inputs.dms.nixosModules.dankMaterialShell
+      ];
+    };
+
+    nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hosts/nixos-vm/configuration.nix
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;

@@ -8,13 +8,11 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Kernel Optimization (CachyOS)
-  boot.kernelPackages = pkgs.linuxPackagesFor pkgs.linuxPackages_cachyos;
-  
-  nixpkgs.config.allowUnfree = true;
+  # Kernel (Standard for VM)
+  boot.kernelPackages = pkgs.linuxPackages;
 
   # Networking
-  networking.hostName = "nixos-desktop";
+  networking.hostName = "nixos-vm";
   networking.networkmanager.enable = true;
 
   # Locale & Time
@@ -36,20 +34,15 @@
     serif = [ "Noto Serif" ];
   };
 
-  # Graphics & Nvidia
+  # Graphics (Generic for VM)
   hardware.graphics.enable = true;
-  services.xserver.videoDrivers = ["nvidia"];
-  hardware.nvidia = {
-    modesetting.enable = true;
-    open = true;
-    powerManagement.enable = true;
-    nvidiaSettings = true;
-  };
-  environment.sessionVariables = {
-    GBM_BACKEND = "nvidia-drm";
-    LIBVA_DRIVER_NAME = "nvidia";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-  };
+  # No Nvidia drivers here
+
+  # KVM Guest Tools
+  services.qemuGuest.enable = true;
+  services.spice-vdagentd.enable = true;
+
+  nixpkgs.config.allowUnfree = true;
 
   # Audio (PipeWire)
   services.pipewire = {
@@ -57,10 +50,6 @@
     alsa.enable = true;
     pulse.enable = true;
   };
-
-  # Bluetooth
-  hardware.bluetooth.enable = true;
-  services.blueman.enable = true;
 
   # XDG Portals
   xdg.portal = {
@@ -70,14 +59,10 @@
 
   # Desktop & Login
   services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
   programs.niri.enable = true;
   programs.dankMaterialShell.enable = true;
-
-  # Gaming
-  programs.steam.enable = true;
-  programs.gamemode.enable = true;
 
   # Virtualisation & Containers
   virtualisation.libvirtd.enable = true;
@@ -97,6 +82,7 @@
     # qidi-studio
     lutris
     # rusty-path-of-building
+    # rusty-path-of-building # Might be heavy for VM, keeping it if user wants same environment
     vim
     git
     direnv
@@ -119,10 +105,6 @@
   services.btrfs.autoScrub.enable = true;
   services.fstrim.enable = true;
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.settings = {
-    substituters = [ "https://nixos-cachyos-kernel.cachix.org" ];
-    trusted-public-keys = [ "nixos-cachyos-kernel.cachix.org-1:9Uf4shEitU6p61+nUuW4/V9qVxlYkH9YJbe1KwiI53M=" ];
-  };
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -133,7 +115,4 @@
   programs.nix-ld.enable = true;
 
   system.stateVersion = "25.11";
-
-  # Allow unfree for this evaluation (redundant but safe)
-  nixpkgs.config.allowUnfreePredicate = (_: true);
 }

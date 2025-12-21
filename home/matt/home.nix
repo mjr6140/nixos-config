@@ -45,7 +45,7 @@
     }
   '' + (if isVM then ''
     
-    spawn-at-startup "${pkgs.bash}/bin/bash" "-c" "sleep 3; ${pkgs.spice-vdagent}/bin/spice-vdagent > /tmp/spice-debug.log 2>&1"
+    spawn-at-startup "systemctl" "--user" "start" "spice-vdagent"
   '' else "");
 
   # Shell & Terminal Enhancements
@@ -81,9 +81,10 @@
     Service = {
       ExecStart = "${pkgs.spice-vdagent}/bin/spice-vdagent -x";
       Restart = "on-failure";
+      RestartSec = "3s";
     };
     Install = {
-      WantedBy = [ "graphical-session.target" ];
+      WantedBy = [ "graphical-session.target" "default.target" ];
     };
   };
 }

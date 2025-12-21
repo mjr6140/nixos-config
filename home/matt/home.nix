@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }: {
+{ config, pkgs, inputs, isVM, ... }: {
   home.username = "matt";
   home.homeDirectory = "/home/matt";
   home.stateVersion = "25.11";
@@ -12,7 +12,7 @@
     gnomeExtensions.gsconnect
     gnomeExtensions.hot-edge
     gnomeExtensions.logo-menu
-  ];
+  ] ++ (pkgs.lib.optionals isVM [ pkgs.spice-vdagent ]);
 
   # Enable and configure GNOME Extensions
   dconf.settings = {
@@ -65,6 +65,22 @@
         required = true;
         clean = "git-lfs clean -- %f";
       };
+    };
+  };
+
+  # SPICE agent for VM auto-resize and clipboard
+  systemd.user.services.spice-vdagent = pkgs.lib.mkIf isVM {
+    Unit = {
+      Description = "Spice session agent";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.spice-vdagent}/bin/spice-vdagent -x";
+      Restart = "on-failure";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 }

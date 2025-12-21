@@ -22,9 +22,9 @@
 
   outputs = { self, nixpkgs, home-manager, dms, antigravity, cachyos-kernel, ... }@inputs: {
     nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
+        { nixpkgs.hostPlatform = "x86_64-linux"; }
         ./hosts/nixos-desktop/configuration.nix
         inputs.cachyos-kernel.nixosModules.default
         ({ ... }: {
@@ -34,22 +34,22 @@
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.matt = import ./home/matt/home.nix;
-          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.extraSpecialArgs = { inherit inputs; isVM = false; };
         }
         inputs.dms.nixosModules.dankMaterialShell
       ];
     };
 
     nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
-      system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
+        { nixpkgs.hostPlatform = "x86_64-linux"; }
         ./hosts/nixos-vm/configuration.nix
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.matt = import ./home/matt/home.nix;
-          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.extraSpecialArgs = { inherit inputs; isVM = true; };
         }
         inputs.dms.nixosModules.dankMaterialShell
       ];

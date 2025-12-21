@@ -45,7 +45,7 @@
     }
   '' + (if isVM then ''
     
-    spawn-at-startup "spice-vdagent"
+    spawn-at-startup "${pkgs.bash}/bin/bash" "-c" "sleep 3; ${pkgs.spice-vdagent}/bin/spice-vdagent > /tmp/spice-debug.log 2>&1"
   '' else "");
 
   # Shell & Terminal Enhancements
@@ -68,6 +68,22 @@
         required = true;
         clean = "git-lfs clean -- %f";
       };
+    };
+  };
+
+  # SPICE agent for VM auto-resize and clipboard
+  systemd.user.services.spice-vdagent = pkgs.lib.mkIf isVM {
+    Unit = {
+      Description = "Spice session agent";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.spice-vdagent}/bin/spice-vdagent -x";
+      Restart = "on-failure";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 }

@@ -12,7 +12,7 @@
   boot.kernelPackages = pkgs.linuxPackages_cachyos;
 
   # Networking
-  networking.hostName = "gaming-pc";
+  networking.hostName = "nixos-desktop";
   networking.networkmanager.enable = true;
 
   # Locale & Time

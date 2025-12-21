@@ -1,5 +1,5 @@
 {
-  description = "Gaming PC NixOS Flake";
+  description = "Development and Gaming Desktop NixOS Flake";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -22,11 +22,11 @@
   };
 
   outputs = { self, nixpkgs, home-manager, dms, antigravity, cachyos-kernel, ... }@inputs: {
-    nixosConfigurations.gaming-pc = nixpkgs.lib.nixosSystem {
+    nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
       modules = [
-        ./hosts/gaming-pc/configuration.nix
+        ./hosts/nixos-desktop/configuration.nix
         cachyos-kernel.nixosModules.cachyos-kernel
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;

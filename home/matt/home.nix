@@ -3,6 +3,8 @@
   home.homeDirectory = "/home/matt";
   home.stateVersion = "25.11";
 
+  home.file."vm-check-debug".text = if isVM then "VM=true" else "VM=false";
+
   home.packages = with pkgs; [
     inputs.antigravity.packages.${pkgs.system}.google-antigravity
     # GNOME Extensions
@@ -45,7 +47,7 @@
     }
   '' + (if isVM then ''
     
-    spawn-at-startup "systemctl" "--user" "start" "spice-vdagent"
+    spawn-at-startup "systemctl" "--user" "start" "--no-block" "spice-vdagent"
   '' else "");
 
   # Shell & Terminal Enhancements
@@ -75,8 +77,6 @@
   systemd.user.services.spice-vdagent = pkgs.lib.mkIf isVM {
     Unit = {
       Description = "Spice session agent";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
     };
     Service = {
       ExecStart = "${pkgs.spice-vdagent}/bin/spice-vdagent -x";

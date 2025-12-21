@@ -3,8 +3,6 @@
   home.homeDirectory = "/home/matt";
   home.stateVersion = "25.11";
 
-  home.file."vm-check-debug".text = if isVM then "VM=true" else "VM=false";
-
   home.packages = with pkgs; [
     inputs.antigravity.packages.${pkgs.system}.google-antigravity
     # GNOME Extensions
@@ -45,10 +43,7 @@
         Mod+B hotkey-overlay-title="Open Firefox" { spawn "firefox"; }
         Mod+T hotkey-overlay-title="Open Terminal" { spawn "alacritty"; }
     }
-  '' + (if isVM then ''
-    
-    # spawn-at-startup "${pkgs.bash}/bin/bash" "-c" "${pkgs.spice-vdagent}/bin/spice-vdagent"
-  '' else "");
+  '';
 
   # Shell & Terminal Enhancements
   programs.bash.enable = true;

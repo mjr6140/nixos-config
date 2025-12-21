@@ -20,7 +20,14 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, dms, antigravity, cachyos-kernel, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, dms, antigravity, cachyos-kernel, ... }@inputs:
+    let
+      # Shared overlays for all hosts
+      sharedOverlays = [
+        (import ./overlays/pob-fix.nix)
+      ];
+    in
+    {
     nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
       specialArgs = { inherit inputs; };
       modules = [
@@ -30,8 +37,7 @@
         ({ ... }: {
           nixpkgs.overlays = [ 
             inputs.cachyos-kernel.overlays.default
-            (import ./overlays/pob-fix.nix)
-          ];
+          ] ++ sharedOverlays;
         })
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
@@ -49,6 +55,9 @@
       modules = [
         { nixpkgs.hostPlatform = "x86_64-linux"; }
         ./hosts/nixos-vm/configuration.nix
+        ({ ... }: {
+          nixpkgs.overlays = sharedOverlays;
+        })
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
@@ -59,5 +68,8 @@
         inputs.dms.nixosModules.dankMaterialShell
       ];
     };
+
+    # Formatter for `nix fmt`
+    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
   };
 }

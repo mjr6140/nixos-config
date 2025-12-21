@@ -1,3 +1,6 @@
+# Common system configuration shared across all hosts
+# Includes: bootloader, locale, fonts, audio, graphics, networking, users,
+# virtualisation, hardware services, security hardening, and maintenance
 { config, pkgs, ... }:
 
 {
@@ -54,6 +57,15 @@
     extraGroups = [ "wheel" "networkmanager" "libvirtd" "docker" ];
   };
 
+  # SSH (secure configuration)
+  services.openssh = {
+    enable = true;
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;  # Key-based auth only
+    };
+  };
+
   # Hardware Services
   services.flatpak.enable = true;
   services.fwupd.enable = true;
@@ -63,10 +75,43 @@
     nssmdns4 = true;
   };
 
+  # Security hardening
+  security.sudo.wheelNeedsPassword = true;
+  security.polkit.enable = true;
+  security.rtkit.enable = true;  # For PipeWire real-time priority
+
+  # Kernel hardening
+  boot.kernel.sysctl = {
+    "kernel.dmesg_restrict" = 1;
+    "kernel.kptr_restrict" = 2;
+    "net.core.bpf_jit_harden" = 2;
+  };
+
+  # Zram swap for better memory management
+  zramSwap = {
+    enable = true;
+    algorithm = "zstd";
+    memoryPercent = 50;
+  };
+
   # Maintenance & Flakes
   services.btrfs.autoScrub.enable = true;
-  services.fstrim.enable = true;
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  services.fstrim = {
+    enable = true;
+    interval = "weekly";
+  };
+  
+  nix.settings = {
+    experimental-features = [ "nix-command" "flakes" ];
+    
+    # Performance optimizations
+    max-jobs = "auto";
+    cores = 0;  # Use all available cores
+    auto-optimise-store = true;
+    
+    # Trusted users for binary cache
+    trusted-users = [ "root" "@wheel" ];
+  };
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -78,4 +123,18 @@
 
   # Networking (NetworkManager)
   networking.networkmanager.enable = true;
+
+  # Firewall
+  networking.firewall = {
+    enable = true;
+    allowedTCPPorts = [ 22 ];  # SSH
+    allowedUDPPorts = [ ];
+    # For GSConnect (GNOME phone integration)
+    allowedTCPPortRanges = [ 
+      { from = 1714; to = 1764; }
+    ];
+    allowedUDPPortRanges = [ 
+      { from = 1714; to = 1764; }
+    ];
+  };
 }

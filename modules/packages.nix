@@ -1,3 +1,5 @@
+# System-wide packages shared across all hosts
+# Add new applications here to make them available on both desktop and VM
 { config, pkgs, ... }:
 
 {

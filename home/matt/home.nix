@@ -25,7 +25,7 @@
         "caffeine@patapon.info"
         "gsconnect@andyholmes.github.io"
         "hotedge@jonathan.jdoda.ca"
-        "logomenu@aryan_k"
+        # "logomenu@aryan_k"
       ];
     };
   };

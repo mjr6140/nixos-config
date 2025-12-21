@@ -25,5 +25,15 @@
     # GNOME Tools
     gnome-tweaks
     gnome-extension-manager
+
+    # Misc
+    obsidian
   ];
+
+  # Mikrotik Winbox 4 (Native Linux Version)
+  programs.winbox = {
+    enable = true;
+    package = pkgs.winbox4;
+    openFirewall = true;
+  };
 }

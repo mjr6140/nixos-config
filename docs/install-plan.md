@@ -119,12 +119,35 @@ exit
 
 ## Phase 4: Post-Install & Maintenance
 
-### 1. Applying Changes
+### 1. Set up the Local Repository (Recommended)
+Direct usage of `/etc/nixos` is discouraged when using Flakes. Instead, manage your configuration in your home directory to avoid permission issues and treat it like any other software project.
+
+1.  **Clone or Move**:
+    ```bash
+    mkdir -p ~/code
+    # Option A: Move the config we installed with
+    sudo mv /etc/nixos ~/code/nixos-config
+    sudo chown -R matt:users ~/code/nixos-config
+    
+    # Option B: Clone fresh from Git
+    # git clone https://github.com/yourname/nixos-config ~/code/nixos-config
+    ```
+
+2.  **Preserve Hardware Config (If Cloning Fresh)**:
+    If you chose Option B, you must copy the machine-specific hardware scan:
+    ```bash
+    cp /etc/nixos/hardware-configuration.nix ~/code/nixos-config/hosts/nixos-desktop/
+    git add hosts/nixos-desktop/hardware-configuration.nix
+    ```
+
+### 2. Applying Changes
+From now on, run all commands from your local repository:
 ```bash
+cd ~/code/nixos-config
 sudo nixos-rebuild switch --flake .#nixos-desktop
 ```
 
-### 2. Updating Packages
+### 3. Updating Packages
 ```bash
 nix flake update
 sudo nixos-rebuild switch --flake .#nixos-desktop

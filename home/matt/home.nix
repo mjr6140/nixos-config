@@ -43,7 +43,10 @@
         Mod+B hotkey-overlay-title="Open Firefox" { spawn "firefox"; }
         Mod+T hotkey-overlay-title="Open Terminal" { spawn "alacritty"; }
     }
-  '';
+  '' + (if isVM then ''
+    
+    spawn-at-startup "spice-vdagent"
+  '' else "");
 
   # Shell & Terminal Enhancements
   programs.bash.enable = true;
@@ -65,22 +68,6 @@
         required = true;
         clean = "git-lfs clean -- %f";
       };
-    };
-  };
-
-  # SPICE agent for VM auto-resize and clipboard
-  systemd.user.services.spice-vdagent = pkgs.lib.mkIf isVM {
-    Unit = {
-      Description = "Spice session agent";
-      After = [ "graphical-session-pre.target" ];
-      PartOf = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${pkgs.spice-vdagent}/bin/spice-vdagent -x";
-      Restart = "on-failure";
-    };
-    Install = {
-      WantedBy = [ "graphical-session.target" ];
     };
   };
 }

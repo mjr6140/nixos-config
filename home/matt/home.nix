@@ -47,7 +47,7 @@
     }
   '' + (if isVM then ''
     
-    spawn-at-startup "systemctl" "--user" "start" "--no-block" "spice-vdagent"
+    spawn-at-startup "${pkgs.bash}/bin/bash" "-c" "${pkgs.spice-vdagent}/bin/spice-vdagent"
   '' else "");
 
   # Shell & Terminal Enhancements
@@ -77,14 +77,15 @@
   systemd.user.services.spice-vdagent = pkgs.lib.mkIf isVM {
     Unit = {
       Description = "Spice session agent";
+      After = [ "graphical-session-pre.target" ];
+      PartOf = [ "graphical-session.target" ];
     };
     Service = {
       ExecStart = "${pkgs.spice-vdagent}/bin/spice-vdagent -x";
       Restart = "on-failure";
-      RestartSec = "3s";
     };
     Install = {
-      WantedBy = [ "graphical-session.target" "default.target" ];
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 }

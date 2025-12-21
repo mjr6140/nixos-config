@@ -1,0 +1,41 @@
+{
+  description = "Gaming PC NixOS Flake";
+
+  inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell/stable";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    antigravity = {
+      url = "github:jacopone/antigravity-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    cachyos-kernel = {
+      url = "github:drakon64/nixos-cachyos-kernel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs = { self, nixpkgs, home-manager, dms, antigravity, cachyos-kernel, ... }@inputs: {
+    nixosConfigurations.gaming-pc = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
+      specialArgs = { inherit inputs; };
+      modules = [
+        ./hosts/gaming-pc/configuration.nix
+        cachyos-kernel.nixosModules.cachyos-kernel
+        home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.matt = import ./home/matt/home.nix;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+        }
+        inputs.dms.nixosModules.dankMaterialShell
+      ];
+    };
+  };
+}

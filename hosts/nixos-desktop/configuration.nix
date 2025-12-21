@@ -38,9 +38,6 @@
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
 
-  # Gaming (desktop-specific)
-  programs.steam.enable = true;
-  programs.gamemode.enable = true;
 
   # CachyOS kernel cache (desktop-specific)
   nix.settings = {

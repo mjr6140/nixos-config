@@ -26,4 +26,8 @@
 
   # XDG Desktop Portal configuration
   xdg.portal.config.common.default = "*";
+
+  # Gaming (shared across all desktop-like hosts)
+  programs.steam.enable = true;
+  programs.gamemode.enable = true;
 }

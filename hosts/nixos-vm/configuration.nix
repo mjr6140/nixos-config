@@ -12,8 +12,8 @@
   # Networking (host-specific)
   networking.hostName = "nixos-vm";
 
-  # Kernel (Standard for VM)
-  boot.kernelPackages = pkgs.linuxPackages;
+  # Kernel (Latest for VM)
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # KVM Guest Tools (VM-specific)
   services.qemuGuest.enable = true;

@@ -95,7 +95,7 @@
     brave
     thunderbird
     lutris
-    # rusty-path-of-building
+    rusty-path-of-building
     vim
     git
     direnv

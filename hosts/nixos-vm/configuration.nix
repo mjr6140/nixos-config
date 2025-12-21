@@ -80,8 +80,7 @@
     brave
     thunderbird
     lutris
-    # rusty-path-of-building
-    # rusty-path-of-building # Might be heavy for VM, keeping it if user wants same environment
+    rusty-path-of-building
     vim
     git
     direnv

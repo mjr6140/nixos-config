@@ -28,7 +28,10 @@
         ./hosts/nixos-desktop/configuration.nix
         inputs.cachyos-kernel.nixosModules.default
         ({ ... }: {
-          nixpkgs.overlays = [ inputs.cachyos-kernel.overlays.default ];
+          nixpkgs.overlays = [ 
+            inputs.cachyos-kernel.overlays.default
+            (import ./overlays/pob-fix.nix)
+          ];
         })
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;

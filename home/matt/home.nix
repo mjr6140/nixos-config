@@ -4,7 +4,7 @@
   home.stateVersion = "25.11";
 
   home.packages = with pkgs; [
-    inputs.antigravity.packages.${pkgs.system}.google-antigravity
+    inputs.antigravity.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity
     # GNOME Extensions
     gnomeExtensions.dash-to-panel
     gnomeExtensions.appindicator

@@ -28,48 +28,50 @@
       ];
     in
     {
-    nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs; };
-      modules = [
-        { nixpkgs.hostPlatform = "x86_64-linux"; }
-        ./hosts/nixos-desktop/configuration.nix
-        inputs.cachyos-kernel.nixosModules.default
-        ({ ... }: {
-          nixpkgs.overlays = [ 
-            inputs.cachyos-kernel.overlays.default
-          ] ++ sharedOverlays;
-        })
-        home-manager.nixosModules.home-manager {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.matt = import ./home/matt/home.nix;
-          home-manager.extraSpecialArgs = { inherit inputs; isVM = false; };
-          home-manager.backupFileExtension = "backup";
-        }
-        inputs.dms.nixosModules.dankMaterialShell
-      ];
-    };
+      nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          { nixpkgs.hostPlatform = "x86_64-linux"; }
+          ./hosts/nixos-desktop/configuration.nix
+          inputs.cachyos-kernel.nixosModules.default
+          ({ ... }: {
+            nixpkgs.overlays = [
+              inputs.cachyos-kernel.overlays.default
+            ] ++ sharedOverlays;
+          })
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.matt = import ./home/matt/home.nix;
+            home-manager.extraSpecialArgs = { inherit inputs; isVM = false; };
+            home-manager.backupFileExtension = "backup";
+          }
+          inputs.dms.nixosModules.dankMaterialShell
+        ];
+      };
 
-    nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
-      specialArgs = { inherit inputs; };
-      modules = [
-        { nixpkgs.hostPlatform = "x86_64-linux"; }
-        ./hosts/nixos-vm/configuration.nix
-        ({ ... }: {
-          nixpkgs.overlays = sharedOverlays;
-        })
-        home-manager.nixosModules.home-manager {
-          home-manager.useGlobalPkgs = true;
-          home-manager.useUserPackages = true;
-          home-manager.users.matt = import ./home/matt/home.nix;
-          home-manager.extraSpecialArgs = { inherit inputs; isVM = true; };
-          home-manager.backupFileExtension = "backup";
-        }
-        inputs.dms.nixosModules.dankMaterialShell
-      ];
-    };
+      nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        modules = [
+          { nixpkgs.hostPlatform = "x86_64-linux"; }
+          ./hosts/nixos-vm/configuration.nix
+          ({ ... }: {
+            nixpkgs.overlays = sharedOverlays;
+          })
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.matt = import ./home/matt/home.nix;
+            home-manager.extraSpecialArgs = { inherit inputs; isVM = true; };
+            home-manager.backupFileExtension = "backup";
+          }
+          inputs.dms.nixosModules.dankMaterialShell
+        ];
+      };
 
-    # Formatter for `nix fmt`
-    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
-  };
+      # Formatter for `nix fmt`
+      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
+    };
 }

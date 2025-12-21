@@ -94,7 +94,6 @@
   environment.systemPackages = with pkgs; [
     brave
     thunderbird
-    # qidi-studio
     lutris
     # rusty-path-of-building
     vim

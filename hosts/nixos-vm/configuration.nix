@@ -79,7 +79,6 @@
   environment.systemPackages = with pkgs; [
     brave
     thunderbird
-    # qidi-studio
     lutris
     # rusty-path-of-building
     # rusty-path-of-building # Might be heavy for VM, keeping it if user wants same environment

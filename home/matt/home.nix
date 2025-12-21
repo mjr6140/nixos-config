@@ -12,6 +12,7 @@
     gnomeExtensions.gsconnect
     gnomeExtensions.hot-edge
     gnomeExtensions.logo-menu
+    (pkgs.callPackage ./qidi-studio.nix {})
   ] ++ (pkgs.lib.optionals isVM [ pkgs.spice-vdagent ]);
 
   # Enable and configure GNOME Extensions
@@ -29,6 +30,19 @@
     };
   };
 
+  # Default Applications
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "brave-browser.desktop";
+      "x-scheme-handler/http" = "brave-browser.desktop";
+      "x-scheme-handler/https" = "brave-browser.desktop";
+      "x-scheme-handler/about" = "brave-browser.desktop";
+      "x-scheme-handler/unknown" = "brave-browser.desktop";
+      "x-scheme-handler/mailto" = "thunderbird.desktop";
+    };
+  };
+
   # Use custom.kdl for personal tweaks; DMS manages config.kdl
   xdg.configFile."niri/custom.kdl".text = ''
     output "Beihai Century Joint Innovation Technology Co.,Ltd 34CHR Unknown" {
@@ -40,7 +54,7 @@
     }
 
     binds {
-        Mod+B hotkey-overlay-title="Open Firefox" { spawn "firefox"; }
+        Mod+B hotkey-overlay-title="Open Brave" { spawn "brave"; }
         Mod+T hotkey-overlay-title="Open Terminal" { spawn "alacritty"; }
     }
   '';

@@ -35,6 +35,7 @@
           home-manager.useUserPackages = true;
           home-manager.users.matt = import ./home/matt/home.nix;
           home-manager.extraSpecialArgs = { inherit inputs; isVM = false; };
+          home-manager.backupFileExtension = "backup";
         }
         inputs.dms.nixosModules.dankMaterialShell
       ];
@@ -50,6 +51,7 @@
           home-manager.useUserPackages = true;
           home-manager.users.matt = import ./home/matt/home.nix;
           home-manager.extraSpecialArgs = { inherit inputs; isVM = true; };
+          home-manager.backupFileExtension = "backup";
         }
         inputs.dms.nixosModules.dankMaterialShell
       ];

@@ -13,7 +13,9 @@
   networking.hostName = "nixos-desktop";
 
   # Kernel Optimization (CachyOS - desktop-specific)
-  boot.kernelPackages = pkgs.linuxPackagesFor pkgs.linuxPackages_cachyos;
+  # boot.kernelPackages = pkgs.linuxPackagesFor pkgs.linuxPackages_cachyos;
+  # Kernel (Latest for VM)
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Graphics & Nvidia (desktop-specific)
   services.xserver.videoDrivers = ["nvidia"];

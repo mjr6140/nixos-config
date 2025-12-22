@@ -76,8 +76,10 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    userName = "Matt Rickard";
-    userEmail = "mjr6140@gmail.com";
+    extraConfig = {
+      user.name = "Matt Rickard";
+      user.email = "mjr6140@gmail.com";
+    };
   };
 
   # SPICE agent for VM auto-resize and clipboard

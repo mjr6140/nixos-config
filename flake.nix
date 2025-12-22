@@ -17,7 +17,6 @@
     };
     cachyos-kernel = {
       url = "github:drakon64/nixos-cachyos-kernel";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 

@@ -40,4 +40,19 @@
       flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     '';
   };
+
+  # Install Path of Building automatically
+  systemd.services.flatpak-install-pob = {
+    wantedBy = [ "multi-user.target" ];
+    after = [ "flatpak-repo.service" ];
+    path = [ pkgs.flatpak ];
+    script = ''
+      flatpak install -y flathub community.pathofbuilding.PathOfBuilding
+    '';
+    # Only run if not already installed
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+  };
 }

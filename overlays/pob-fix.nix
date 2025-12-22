@@ -1,3 +1,6 @@
+# Path of Building software rendering fix for VMs
+# This overlay forces software rendering which is needed in VMs without GPU passthrough,
+# but should NOT be used on native hardware with proper GPU drivers
 final: prev: {
   rusty-path-of-building = prev.rusty-path-of-building.overrideAttrs (oldAttrs: {
     postFixup = (prev.lib.replaceStrings 

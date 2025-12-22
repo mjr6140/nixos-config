@@ -11,7 +11,8 @@
     
     # Gaming
     lutris
-    rusty-path-of-building
+    # Replaced by flatpak version
+    # rusty-path-of-building
     
     # Development Tools
     vim

@@ -26,8 +26,8 @@
 
   outputs = { self, nixpkgs, home-manager, dms, antigravity, cachyos-kernel, claude-desktop, ... }@inputs:
     let
-      # Shared overlays for all hosts
-      sharedOverlays = [
+      # VM-only overlay for Path of Building software rendering
+      vmOverlays = [
         (import ./overlays/pob-fix.nix)
       ];
     in
@@ -41,7 +41,7 @@
           ({ ... }: {
             nixpkgs.overlays = [
               inputs.cachyos-kernel.overlays.default
-            ] ++ sharedOverlays;
+            ];
           })
           home-manager.nixosModules.home-manager
           {
@@ -61,7 +61,7 @@
           { nixpkgs.hostPlatform = "x86_64-linux"; }
           ./hosts/nixos-vm/configuration.nix
           ({ ... }: {
-            nixpkgs.overlays = sharedOverlays;
+            nixpkgs.overlays = vmOverlays;
           })
           home-manager.nixosModules.home-manager
           {

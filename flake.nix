@@ -17,10 +17,14 @@
     };
     cachyos-kernel = {
       url = "github:drakon64/nixos-cachyos-kernel";
+    };    
+    claude-desktop = {
+      url = "github:k3d3/claude-desktop-linux-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, dms, antigravity, cachyos-kernel, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, dms, antigravity, cachyos-kernel, claude-desktop, ... }@inputs:
     let
       # Shared overlays for all hosts
       sharedOverlays = [

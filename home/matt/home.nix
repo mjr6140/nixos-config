@@ -5,6 +5,7 @@
 
   home.packages = with pkgs; [
     inputs.antigravity.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity
+    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
     (pkgs.callPackage ./qidi-studio.nix {})
   ] ++ (pkgs.lib.optionals isVM [ pkgs.spice-vdagent ]);
 

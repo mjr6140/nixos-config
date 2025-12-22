@@ -17,7 +17,7 @@ This document tracks the "Why" behind the configuration choices in this NixOS se
     - **Automation**: `direnv` automatically loads shells upon entering a directory.
 
 ## Optimized Kernel
-- **Decision**: CachyOS Kernel.
+- **Decision**:  Latest stable kernel.
 - **Rationale**: Better responsiveness and performance optimizations for gaming and desktop use.
 
 ## Desktop Environment

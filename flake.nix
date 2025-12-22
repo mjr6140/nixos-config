@@ -15,16 +15,13 @@
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    cachyos-kernel = {
-      url = "github:drakon64/nixos-cachyos-kernel";
-    };    
     claude-desktop = {
       url = "github:k3d3/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, dms, antigravity, cachyos-kernel, claude-desktop, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, dms, antigravity, claude-desktop, ... }@inputs:
     let
       # VM-only overlay for Path of Building software rendering
       vmOverlays = [
@@ -37,12 +34,6 @@
         modules = [
           { nixpkgs.hostPlatform = "x86_64-linux"; }
           ./hosts/nixos-desktop/configuration.nix
-          inputs.cachyos-kernel.nixosModules.default
-          ({ ... }: {
-            nixpkgs.overlays = [
-              inputs.cachyos-kernel.overlays.default
-            ];
-          })
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;

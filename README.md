@@ -66,7 +66,7 @@ nix fmt
 
 ### System
 - **Filesystem**: Btrfs with compression, snapshots, and SSD optimizations
-- **Kernel**: CachyOS optimized kernel for gaming/desktop
+- **Kernel**: Latest stable kernel
 - **Graphics**: Nvidia open drivers with Wayland support
 - **Audio**: PipeWire (ALSA/Pulse compatibility)
 - **Virtualization**: KVM/QEMU, Docker, libvirt
@@ -85,7 +85,7 @@ nix fmt
 
 ### Gaming
 - **Platforms**: Steam, Lutris
-- **Optimizations**: GameMode, CachyOS kernel
+- **Optimizations**: GameMode
 - **Tools**: Path of Building (Rusty PoB with Wayland fixes)
 
 ## 🛠️ Common Tasks

@@ -260,7 +260,7 @@ sudo nixos-install --flake .#nixos-vm
 | Nvidia Drivers | System | Open drivers with power management & settings GUI. |
 | Steam | System | `programs.steam.enable = true` in config. |
 | Antigravity IDE | User | Dedicated Flake input and home.nix package. |
-| Optimized Kernel | System | CachyOS via flake kernel module. |
+| Optimized Kernel | System | Latest stable kernel |
 | Virtualization | System | KVM + Virt-Manager + Docker. |
 | Media | System | VLC & PipeWire (ALSA/Pulse). |
 | Desktop Environment | System | GNOME + Niri + DMS. |

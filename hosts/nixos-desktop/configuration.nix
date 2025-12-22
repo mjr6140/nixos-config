@@ -12,9 +12,7 @@
   # Networking (host-specific)
   networking.hostName = "nixos-desktop";
 
-  # Kernel Optimization (CachyOS - desktop-specific)
-  # boot.kernelPackages = pkgs.linuxPackagesFor pkgs.linuxPackages_cachyos;
-  # Kernel (Latest for VM)
+  # Kernel (Latest stable)
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Graphics & Nvidia (desktop-specific)
@@ -39,13 +37,6 @@
   # Bluetooth (desktop-specific)
   hardware.bluetooth.enable = true;
   services.blueman.enable = true;
-
-
-  # CachyOS kernel cache (desktop-specific)
-  nix.settings = {
-    substituters = [ "https://nixos-cachyos-kernel.cachix.org" ];
-    trusted-public-keys = [ "nixos-cachyos-kernel.cachix.org-1:9Uf4shEitU6p61+nUuW4/V9qVxlYkH9YJbe1KwiI53M=" ];
-  };
 
   system.stateVersion = "25.11";
 }

@@ -25,7 +25,7 @@
   # Legacy dconf settings (kept for compatibility)
   dconf.settings = {
     "org/gnome/desktop/wm/preferences" = {
-      button-layout = "close,minimize,maximize:";
+      button-layout = ":minimize,maximize,close";
     };
     "org/gnome/shell" = {
       disable-user-extensions = false;

@@ -21,21 +21,6 @@
         "type": "github"
       }
     },
-    "cachyos-kernel": {
-      "locked": {
-        "lastModified": 1743535541,
-        "narHash": "sha256-OlBtXY26w9OcAmpqrTvxaG4/rfDdavauQF2eRxb+ySs=",
-        "owner": "drakon64",
-        "repo": "nixos-cachyos-kernel",
-        "rev": "8516d89c4e0c4a25cea1be8431db3963359ee81b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "drakon64",
-        "repo": "nixos-cachyos-kernel",
-        "type": "github"
-      }
-    },
     "claude-desktop": {
       "inputs": {
         "flake-utils": "flake-utils_2",
@@ -198,7 +183,6 @@
     "root": {
       "inputs": {
         "antigravity": "antigravity",
-        "cachyos-kernel": "cachyos-kernel",
         "claude-desktop": "claude-desktop",
         "dms": "dms",
         "home-manager": "home-manager",

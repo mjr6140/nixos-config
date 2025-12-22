@@ -1,0 +1,14 @@
+# Nix build artifacts
+result
+result-*
+
+# Editor artifacts
+.direnv/
+.envrc
+
+# Backup files
+*.backup
+*~
+
+# Hardware-specific configs (uncomment if you want to keep them local)
+# hosts/*/hardware-configuration.nix

@@ -70,16 +70,8 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    settings = {
-      user.name = "Matt Rickard";
-      user.email = "mjr6140@gmail.com";
-      filter."lfs" = {
-        smudge = "git-lfs smudge -- %f";
-        process = "git-lfs filter-process";
-        required = true;
-        clean = "git-lfs clean -- %f";
-      };
-    };
+    userName = "Matt Rickard";
+    userEmail = "mjr6140@gmail.com";
   };
 
   # SPICE agent for VM auto-resize and clipboard

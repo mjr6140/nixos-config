@@ -50,6 +50,12 @@
     };
   };
 
+  # Hide duplicate Brave desktop file (both files point to same binary)
+  xdg.dataFile."applications/com.brave.Browser.desktop".text = ''[Desktop Entry]
+Type=Application
+Hidden=true
+'';
+
   # Use custom.kdl for personal tweaks; DMS manages config.kdl
   xdg.configFile."niri/custom.kdl".text = ''
     output "Beihai Century Joint Innovation Technology Co.,Ltd 34CHR Unknown" {

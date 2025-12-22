@@ -5,17 +5,23 @@
 
   home.packages = with pkgs; [
     inputs.antigravity.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity
-    # GNOME Extensions
-    gnomeExtensions.dash-to-panel
-    gnomeExtensions.appindicator
-    gnomeExtensions.caffeine
-    gnomeExtensions.gsconnect
-    gnomeExtensions.hot-edge
-    gnomeExtensions.logo-menu
     (pkgs.callPackage ./qidi-studio.nix {})
   ] ++ (pkgs.lib.optionals isVM [ pkgs.spice-vdagent ]);
 
-  # Enable and configure GNOME Extensions
+  # GNOME Extensions - installed and configured
+  programs.gnome-shell = {
+    enable = true;
+    extensions = [
+      { package = pkgs.gnomeExtensions.dash-to-panel; }
+      { package = pkgs.gnomeExtensions.appindicator; }
+      { package = pkgs.gnomeExtensions.caffeine; }
+      { package = pkgs.gnomeExtensions.gsconnect; }
+      { package = pkgs.gnomeExtensions.hot-edge; }
+      # { package = pkgs.gnomeExtensions.logo-menu; }  # Uncomment if needed
+    ];
+  };
+
+  # Legacy dconf settings (kept for compatibility)
   dconf.settings = {
     "org/gnome/shell" = {
       disable-user-extensions = false;

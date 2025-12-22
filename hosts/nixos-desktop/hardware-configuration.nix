@@ -55,6 +55,23 @@
     ];
   };
 
+  # Bazzite disk
+  fileSystems."/mnt/bazzite" = {
+    device = "/dev/disk/by-uuid/e885e556-0569-4330-92ae-1a77f60e0c86";
+    fsType = "btrfs";
+    options = [ 
+      "rw" 
+      "nosuid" 
+      "nodev" 
+      "relatime" 
+      "ssd" 
+      "discard=async" 
+      "space_cache=v2" 
+      "subvolid=5" 
+      "subvol=/"  
+    ];
+  };
+
   swapDevices = [ ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

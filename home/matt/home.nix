@@ -76,7 +76,7 @@
   programs.git = {
     enable = true;
     lfs.enable = true;
-    extraConfig = {
+    settings = {
       user.name = "Matt Rickard";
       user.email = "mjr6140@gmail.com";
     };

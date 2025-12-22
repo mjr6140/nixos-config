@@ -18,6 +18,11 @@
     git
     direnv
     nix-direnv
+    alacritty
+
+    # Virtualization and Containerization
+    distrobox
+    distroshelf
     
     # Media
     vlc

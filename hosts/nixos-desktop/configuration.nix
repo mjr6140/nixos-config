@@ -7,6 +7,7 @@
     ../../modules/common.nix
     ../../modules/desktop.nix
     ../../modules/packages.nix
+    ../../modules/nvidia-suspend-fix.nix
   ];
 
   # Networking (host-specific)
@@ -16,6 +17,7 @@
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # Graphics & Nvidia (desktop-specific)
+  boot.blacklistedKernelModules = [ "nouveau" ];
   services.xserver.videoDrivers = ["nvidia"];
   hardware.nvidia = {
     modesetting.enable = true;
@@ -23,7 +25,7 @@
     powerManagement.enable = true;
     powerManagement.finegrained = false;  # Disable for desktop
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.stable;
+    package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
   environment.sessionVariables = {
     GBM_BACKEND = "nvidia-drm";

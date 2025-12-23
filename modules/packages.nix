@@ -19,7 +19,13 @@
     git
     direnv
     nix-direnv
+
+    # Niri deps
     alacritty
+    fuzzel 
+    swaylock 
+    mako 
+    swayidle    
 
     # Virtualization and Containerization
     distrobox

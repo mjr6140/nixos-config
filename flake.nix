@@ -27,6 +27,7 @@
 
   outputs = { self, nixpkgs, home-manager, dms, antigravity, claude-desktop, llm-agents, ... }@inputs:
     let
+      system = "x86_64-linux";
       # VM-only overlay for Path of Building software rendering
       vmOverlays = [
         (import ./overlays/pob-fix.nix)
@@ -34,9 +35,9 @@
     in
     {
       nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
+        inherit system;
         specialArgs = { inherit inputs; };
         modules = [
-          { nixpkgs.hostPlatform = "x86_64-linux"; }
           ./hosts/nixos-desktop/configuration.nix
           home-manager.nixosModules.home-manager
           {
@@ -51,9 +52,9 @@
       };
 
       nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
+        inherit system;
         specialArgs = { inherit inputs; };
         modules = [
-          { nixpkgs.hostPlatform = "x86_64-linux"; }
           ./hosts/nixos-vm/configuration.nix
           ({ ... }: {
             nixpkgs.overlays = vmOverlays;
@@ -71,6 +72,6 @@
       };
 
       # Formatter for `nix fmt`
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.nixpkgs-fmt;
+      formatter.${system} = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
     };
 }

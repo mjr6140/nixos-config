@@ -12,3 +12,5 @@ result-*
 
 # Hardware-specific configs (uncomment if you want to keep them local)
 # hosts/*/hardware-configuration.nix
+
+AGENTS.md

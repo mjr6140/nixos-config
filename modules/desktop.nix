@@ -34,26 +34,17 @@
 
   # Flatpak & Flathub
   services.flatpak.enable = true;
-  systemd.services.flatpak-repo = {
+  systemd.services.flatpak-setup = {
     wantedBy = [ "multi-user.target" ];
+    after = [ "network-online.target" ];
+    wants = [ "network-online.target" ];
     path = [ pkgs.flatpak ];
     script = ''
       flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      flatpak install --system --noninteractive --or-update flathub community.pathofbuilding.PathOfBuilding
     '';
-  };
-
-  # Install Path of Building automatically
-  systemd.services.flatpak-install-pob = {
-    wantedBy = [ "multi-user.target" ];
-    after = [ "flatpak-repo.service" ];
-    path = [ pkgs.flatpak ];
-    script = ''
-      flatpak install -y flathub community.pathofbuilding.PathOfBuilding
-    '';
-    # Only run if not already installed
     serviceConfig = {
       Type = "oneshot";
-      RemainAfterExit = true;
     };
   };
 }

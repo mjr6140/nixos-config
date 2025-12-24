@@ -67,7 +67,6 @@
   };
 
   # Hardware Services
-  services.flatpak.enable = true;
   services.fwupd.enable = true;
   services.printing.enable = true;
   services.avahi = {

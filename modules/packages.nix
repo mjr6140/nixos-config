@@ -20,6 +20,7 @@
     git
     direnv
     nix-direnv
+    vscode
     
     # Nix Tools
     nvd

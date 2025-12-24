@@ -1,7 +1,7 @@
 # Common system configuration shared across all hosts
 # Includes: bootloader, locale, fonts, audio, graphics, networking, users,
 # virtualisation, hardware services, security hardening, and maintenance
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 {
   # Bootloader (common settings)
@@ -102,15 +102,17 @@
   
   nix.settings = {
     experimental-features = [ "nix-command" "flakes" ];
-    
+
     # Performance optimizations
     max-jobs = "auto";
     cores = 0;  # Use all available cores
     auto-optimise-store = true;
-    
+
     # Trusted users for binary cache
     trusted-users = [ "root" "@wheel" ];
   };
+  nix.registry.nixpkgs.flake = inputs.nixpkgs;
+  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
   nix.gc = {
     automatic = true;
     dates = "weekly";

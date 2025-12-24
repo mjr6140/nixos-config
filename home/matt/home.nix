@@ -29,14 +29,6 @@
     };
     "org/gnome/shell" = {
       disable-user-extensions = false;
-      enabled-extensions = [
-        "dash-to-panel@jderose9.github.com"
-        "appindicatorsupport@rgcjonas.gmail.com"
-        "caffeine@patapon.info"
-        "gsconnect@andyholmes.github.io"
-        "hotedge@jonathan.jdoda.ca"
-        # "logomenu@aryan_k"
-      ];
     };
   };
 

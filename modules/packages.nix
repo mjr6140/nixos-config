@@ -19,6 +19,9 @@
     git
     direnv
     nix-direnv
+    
+    # Nix Tools
+    nvd
 
     # Niri deps
     alacritty

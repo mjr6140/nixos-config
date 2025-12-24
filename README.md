@@ -19,8 +19,10 @@ sudo nixos-rebuild switch --flake .#nixos-desktop
 
 ### Daily Usage
 ```bash
-# Update all packages
+# Update all flake inputs (nixpkgs, home-manager, etc.)
 nix flake update
+
+# Apply the updated configuration
 sudo nixos-rebuild switch --flake .#nixos-desktop
 
 # Test configuration before switching
@@ -32,6 +34,42 @@ sudo nixos-rebuild build --flake .#nixos-desktop
 # Format Nix files
 nix fmt
 ```
+
+### Checking What Will Be Updated
+
+When updating your flake, it's helpful to see exactly which packages will change:
+
+```bash
+# Method 1: Compare before updating (recommended for planning)
+# Build current configuration first
+sudo nixos-rebuild build --flake .#nixos-desktop
+mv result result-old
+
+# Update the flake
+nix flake update
+
+# Build with updated inputs
+sudo nixos-rebuild build --flake .#nixos-desktop
+
+# Compare to see what changed (install nvd if needed: nix-shell -p nvd)
+nvd diff result-old result
+
+# Method 2: Compare after updating (if you already ran flake update)
+# Build the new configuration
+sudo nixos-rebuild build --flake .#nixos-desktop
+
+# Compare with your currently running system
+nvd diff /run/current-system ./result
+
+# Method 3: Check specific package versions
+# Current system
+nix-store -q --references /run/current-system | grep package-name
+
+# New build
+nix-store -q --references ./result | grep package-name
+```
+
+The `nvd` tool shows a clean list of package upgrades, downgrades, additions, and removals with version numbers (e.g., brave 1.71.118 → 1.72.165).
 
 ## 📁 Directory Structure
 
@@ -65,6 +103,8 @@ nix fmt
 ## 🎯 Features
 
 ### System
+- **NixOS**: Unstable channel (rolling release)
+- **Flakes**: Modern Nix package management with locked dependencies
 - **Filesystem**: Btrfs with compression, snapshots, and SSD optimizations
 - **Kernel**: Latest stable kernel
 - **Graphics**: Nvidia open drivers with Wayland support
@@ -82,6 +122,7 @@ nix fmt
 - **Philosophy**: Per-project environments via `direnv` and `flake.nix`
 - **Tools**: Git, Alacritty, modern shell utilities (starship, fzf, zoxide, eza, bat)
 - **IDE**: Antigravity (via flake input)
+- **AI**: Claude Desktop (via flake input)
 
 ### Gaming
 - **Platforms**: Steam, Lutris

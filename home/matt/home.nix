@@ -84,6 +84,22 @@ Hidden=true
     };
   };
 
+  systemd.user.services.dms = {
+    Unit = {
+      Description = "DankMaterialShell";
+      ConditionEnvironment = "XDG_SESSION_DESKTOP=niri";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.dms}/bin/dms run";
+      Restart = "on-failure";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
   # SPICE agent for VM auto-resize and clipboard
   systemd.user.services.spice-vdagent = pkgs.lib.mkIf isVM {
     Unit = {

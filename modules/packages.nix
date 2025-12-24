@@ -8,6 +8,7 @@
     # Browsers & Communication
     brave
     thunderbird
+    discord-ptb
     
     # Gaming
     lutris
@@ -36,6 +37,9 @@
     
     # Media
     vlc
+    
+    # LLM Agents
+    codex
     
     # GNOME Tools
     gnome-tweaks

@@ -19,9 +19,13 @@
       url = "github:k3d3/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, dms, antigravity, claude-desktop, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, dms, antigravity, claude-desktop, llm-agents, ... }@inputs:
     let
       # VM-only overlay for Path of Building software rendering
       vmOverlays = [

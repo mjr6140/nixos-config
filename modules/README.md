@@ -10,10 +10,12 @@ Contains all shared system configuration:
 - Locale and timezone
 - Fonts
 - Audio (PipeWire)
+- Graphics basics and XDG portals
 - Virtualisation (libvirt, Docker)
 - User accounts
-- Hardware services (printing, Flatpak, etc.)
+- Hardware services (fwupd, printing, Avahi)
 - Nix settings (flakes, garbage collection, etc.)
+- Security hardening, firewall, and maintenance
 
 ### `desktop.nix`
 Desktop environment configuration:
@@ -21,6 +23,8 @@ Desktop environment configuration:
 - GDM display manager
 - Niri window manager
 - DankMaterialShell
+- Flatpak/Flathub setup
+- Gaming (Steam, GameMode)
 
 ### `packages.nix`
 **This is where you add new applications!**

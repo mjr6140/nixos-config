@@ -10,8 +10,8 @@ This document tracks the "Why" behind the configuration choices in this NixOS se
     - **Performance**: Configured with `zstd` compression, `noatime`, and `discard=async` for SSD health and speed.
 
 ## "Nix Way" for Development
-- **Decision**: Use `devShells` and `direnv` instead of global package installation.
-- **Rationale**: 
+- **Decision**: Favor per-project environments with `direnv` and flakes over global installs.
+- **Rationale**:
     - **Isolation**: Each project has its own dependencies (Go, Rust, Python, Node versions).
     - **Reproducibility**: `flake.nix` in project directories ensures the exact same environment across machines.
     - **Automation**: `direnv` automatically loads shells upon entering a directory.

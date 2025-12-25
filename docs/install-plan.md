@@ -93,6 +93,7 @@ Ensure the following files are in place:
 ---
 
 ## Phase 3: The Final Install
+### 1. Install
 ```bash
 cd /mnt/etc/nixos
 nixos-install --flake .#nixos-desktop
@@ -166,7 +167,7 @@ If your system fails to boot after installation, it is likely because the EFI va
 3. Re-run the installation command:
    ```bash
    cd /mnt/etc/nixos
-   nixos-install --flake .#nixos-vm  # Or nixos-desktop
+   nixos-install --flake .#nixos-desktop  # Or nixos-vm as appropriate
    ```
    This will re-install the bootloader into the EFI partition and update the UEFI boot entries.
 
@@ -266,4 +267,3 @@ sudo nixos-install --flake .#nixos-vm
 | Desktop Environment | System | GNOME + Niri + DMS. |
 | Shell Enhancements | User | starship, fzf, zoxide, eza, bat. |
 | Communication | System | Thunderbird & Brave. |
-

@@ -29,6 +29,13 @@
     };
     "org/gnome/shell" = {
       disable-user-extensions = false;
+      favorite-apps = [
+        "org.gnome.Console.desktop"
+        "org.gnome.Nautilus.desktop"
+        "brave-browser.desktop"
+        "thunderbird.desktop"
+        "steam.desktop"
+      ];
     };
   };
 

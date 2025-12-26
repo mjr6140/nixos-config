@@ -7,6 +7,10 @@
 - `home/` contains Home Manager configs (user-level packages and dotfiles).
 - `overlays/` carries package overrides/patches; `docs/` holds supporting guides.
 
+## VS Code Extensions
+- Prefer `nix-vscode-extensions` via overlay and use `pkgs.vscode-marketplace` or `pkgs.open-vsx`.
+- `nix flake update` updates Marketplace extension versions through the flake lock.
+
 ## Build, Test, and Development Commands
 - `sudo nixos-rebuild switch --flake .#nixos-desktop` apply the desktop config.
 - `sudo nixos-rebuild test --flake .#nixos-desktop` validate without switching.
@@ -28,6 +32,7 @@
 - Use `pkgs.callPackage` for local packages; avoid `import ./file.nix { inherit pkgs; }` when `callPackage` fits.
 - Use `lib.recursiveUpdate` or `lib.mkMerge` instead of manual deep attribute updates.
 - Prefer `./.` or `builtins.path` for local sources; avoid deprecated `builtins.filterSource` patterns unless needed.
+- When using `nix-vscode-extensions` overlays, use `pkgs.vscode-marketplace` or `pkgs.open-vsx` directly (no `pkgs.vscode-extensions` attr).
 - If unsure, ask a clarifying question before writing non-trivial Nix.
 
 Examples (bad -> good):

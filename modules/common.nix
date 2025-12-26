@@ -10,6 +10,9 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.overlays = [
+    inputs.vscode-extensions.overlays.default
+  ];
 
   # Locale & Time
   time.timeZone = "America/New_York";

@@ -126,6 +126,20 @@ Hidden=true
     };
   };
 
+  programs.vscode = {
+    enable = true;
+    userSettings = {
+      "git.autofetch" = true;
+    };
+    extensions =
+      with pkgs.vscode-marketplace;
+      [
+        github.copilot
+        github.copilot-chat
+        openai.chatgpt
+      ];
+  };
+
   # SPICE agent for VM auto-resize and clipboard
   systemd.user.services.spice-vdagent = pkgs.lib.mkIf isVM {
     Unit = {

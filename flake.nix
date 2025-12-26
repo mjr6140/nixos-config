@@ -23,9 +23,12 @@
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    vscode-extensions = {
+      url = "github:nix-community/nix-vscode-extensions";
+    };
   };
 
-  outputs = { self, nixpkgs, home-manager, dms, antigravity, claude-desktop, llm-agents, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, dms, antigravity, claude-desktop, llm-agents, vscode-extensions, ... }@inputs:
     let
       system = "x86_64-linux";
       # VM-only overlay for Path of Building software rendering

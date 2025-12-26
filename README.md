@@ -24,18 +24,12 @@ sudo nixos-rebuild switch --flake .#nixos-desktop
 
 ### See What Will Change
 ```bash
-# Build current configuration
-sudo nixos-rebuild build --flake .#nixos-desktop
-mv result result-old
-
-# Update flake inputs
-nix flake update
-
-# Build updated configuration
+# If you've already run `nix flake update`, compare the new build to the
+# currently running system.
 sudo nixos-rebuild build --flake .#nixos-desktop
 
 # Compare builds (install nvd if needed: nix-shell -p nvd)
-nvd diff result-old result
+nvd diff /run/current-system result
 ```
 
 ### Add a System Package (all users)

@@ -136,6 +136,7 @@ Hidden=true
       [
         github.copilot
         github.copilot-chat
+        donjayamanne.githistory
         openai.chatgpt
       ];
   };

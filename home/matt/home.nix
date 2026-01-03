@@ -6,6 +6,7 @@
   home.packages = with pkgs; [
     inputs.antigravity.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity
     inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
+    orca-slicer
     (pkgs.callPackage ./qidi-studio.nix { })
   ] ++ (pkgs.lib.optionals isVM [ pkgs.spice-vdagent ]);
 
@@ -131,14 +132,17 @@ Hidden=true
     userSettings = {
       "git.autofetch" = true;
     };
-    extensions =
-      with pkgs.vscode-marketplace;
-      [
-        github.copilot
-        github.copilot-chat
-        donjayamanne.githistory
-        openai.chatgpt
-      ];
+    extensions = [
+      pkgs.vscode-marketplace.github.copilot
+      (pkgs.vscode-utils.extensionFromVscodeMarketplace {
+        publisher = "GitHub";
+        name = "copilot-chat";
+        version = "0.35.2";
+        sha256 = "11hkdgiwndj6pgxn5wgpryy9nbcbzcqv8ac7w226gznqyhdryi5r";
+      })
+      pkgs.vscode-marketplace.donjayamanne.githistory
+      pkgs.vscode-marketplace.openai.chatgpt
+    ];
   };
 
   # SPICE agent for VM auto-resize and clipboard

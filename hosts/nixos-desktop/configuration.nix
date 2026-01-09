@@ -52,7 +52,7 @@
       ];
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = ''${pkgs.procps}/bin/pkill -f -STOP ${pkgs.gnome-shell}/bin/gnome-shell'';
+        ExecStart = ''${pkgs.procps}/bin/pkill -STOP gnome-shell'';
       };
     };
     services."gnome-resume" = {
@@ -68,7 +68,7 @@
       ];
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = ''${pkgs.procps}/bin/pkill -f -CONT ${pkgs.gnome-shell}/bin/gnome-shell'';
+        ExecStart = ''${pkgs.procps}/bin/pkill -CONT gnome-shell'';
       };
     };
   };

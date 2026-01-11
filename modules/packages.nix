@@ -14,6 +14,8 @@
     lutris
     # Replaced by flatpak version
     # rusty-path-of-building
+    xivlauncher
+    faugus-launcher
     
     # Development Tools
     vim
@@ -48,6 +50,10 @@
 
     # Misc
     obsidian
+
+    # Backup Tools
+    restic
+    borgbackup
   ];
 
   # Mikrotik Winbox 4 (Native Linux Version)

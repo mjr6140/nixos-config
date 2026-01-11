@@ -1,0 +1,67 @@
+version: 2
+
+backends:
+  matt-backup:
+    type: sftp
+    path: restic@10.12.1.99:/mnt/tank/backups/restic-repositories/matt
+    env:
+      RESTIC_PASSWORD_FILE: /home/matt/.config/autorestic/.password
+    rest:
+      user: ""
+      password: ""
+    options: {}
+locations:
+  matt-home:
+    from:
+    - /home/matt
+    - /mnt/storage/Photos
+    type: ""
+    to:
+    - matt-backup
+    hooks:
+      dir: ""
+      prevalidate: []
+      before: []
+      after: []
+      success:
+      - 'curl -m 10 --retry 5 -X POST -H "Content-Type: text/plain" --data "Backup successful for location: ${AUTORESTIC_LOCATION}" ${HEALTHCHECK_URL}'
+      failure:
+      - 'curl -m 10 --retry 5 -X POST -H "Content-Type: text/plain" --data "Backup failed for location: ${AUTORESTIC_LOCATION}" ${HEALTHCHECK_URL_FAIL}'
+    cron: ""
+    options:
+      backup:
+        exclude:
+        - .cache
+        - .linuxbrew
+        - .local/share/containers
+        - .local/share/flatpak
+        - .local/share/Trash
+        - .steam/steam/steamapps/common
+        - .steam/steam/steamapps/shadercache
+        - .local/share/Steam/steamapps/common
+        - .local/share/Steam/steamapps/shadercache
+        - .var/app/com.valvesoftware.Steam/data/Steam/steamapps/common
+        - .var/app/com.valvesoftware.Steam/data/Steam/steamapps/shadercache
+        - .var/app/*/cache
+        - .local/share/lutris
+        - .local/share/Steam
+        - .codeium
+        - .xlcore
+        - Downloads
+        - Games
+        - VirtualBox VMs
+        - '**/__pycache__/'
+        - '**/node_modules'
+        - '*.thumbnails'
+        - '*[Cc]ache*'
+        - '*[Tt]rash*'
+        - .config/Ankama*
+        - /home/matt/mnt
+        - /home/matt/Faugus
+      forget:
+        keep-hourly: 4
+        keep-daily: 14
+        keep-weekly: 4
+        keep-monthly: 12
+        keep-yearly: 5
+        prune: true

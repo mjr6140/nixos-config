@@ -8,6 +8,7 @@
     inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
     orca-slicer
     (pkgs.callPackage ./qidi-studio.nix { })
+    autorestic
   ] ++ (pkgs.lib.optionals isVM [ pkgs.spice-vdagent ]);
 
   # GNOME Extensions - installed and configured
@@ -157,6 +158,36 @@ Hidden=true
     };
     Install = {
       WantedBy = [ "default.target" ];
+    };
+  };
+
+  xdg.configFile."autorestic/.autorestic.yml".source = ./autorestic.yml;
+  xdg.configFile."autorestic/.password".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/autorestic/secrets/.password";
+  xdg.configFile."autorestic/healthchecks.env".source =
+    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/autorestic/secrets/healthchecks.env";
+
+  systemd.user.services.autorestic-backup = {
+    Unit = {
+      Description = "Autorestic backup";
+    };
+    Service = {
+      Type = "oneshot";
+      EnvironmentFile = "%h/.config/autorestic/healthchecks.env";
+      ExecStart = "${lib.getExe pkgs.autorestic} backup -a";
+    };
+  };
+
+  systemd.user.timers.autorestic-backup = {
+    Unit = {
+      Description = "Run autorestic backup hourly";
+    };
+    Timer = {
+      OnCalendar = "hourly";
+      Persistent = true;
+    };
+    Install = {
+      WantedBy = [ "timers.target" ];
     };
   };
 }

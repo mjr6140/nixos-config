@@ -170,6 +170,8 @@ Hidden=true
   systemd.user.services.autorestic-backup = {
     Unit = {
       Description = "Autorestic backup";
+      After = [ "network-online.target" ];
+      Wants = [ "network-online.target" ];
     };
     Service = {
       Type = "oneshot";
@@ -184,7 +186,7 @@ Hidden=true
     };
     Timer = {
       OnCalendar = "hourly";
-      Persistent = true;
+      Persistent = false;
     };
     Install = {
       WantedBy = [ "timers.target" ];

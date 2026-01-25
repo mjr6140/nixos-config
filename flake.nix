@@ -50,7 +50,7 @@
             home-manager.extraSpecialArgs = { inherit inputs; isVM = false; };
             home-manager.backupFileExtension = "backup";
           }
-          inputs.dms.nixosModules.dankMaterialShell
+          inputs.dms.nixosModules.dank-material-shell
         ];
       };
 
@@ -70,7 +70,7 @@
             home-manager.extraSpecialArgs = { inherit inputs; isVM = true; };
             home-manager.backupFileExtension = "backup";
           }
-          inputs.dms.nixosModules.dankMaterialShell
+          inputs.dms.nixosModules.dank-material-shell
         ];
       };
 

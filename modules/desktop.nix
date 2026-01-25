@@ -9,7 +9,7 @@
   services.displayManager.gdm.wayland = true;  # Ensure Wayland is used
   services.desktopManager.gnome.enable = true;
   programs.niri.enable = true;
-  programs.dankMaterialShell.enable = true;
+  programs.dank-material-shell.enable = true;
 
   # GNOME configuration
   services.gnome = {

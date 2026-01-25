@@ -130,20 +130,22 @@ Hidden=true
 
   programs.vscode = {
     enable = true;
-    userSettings = {
-      "git.autofetch" = true;
+    profiles.default = {
+      userSettings = {
+        "git.autofetch" = true;
+      };
+      extensions = [
+        pkgs.vscode-marketplace.github.copilot
+        (pkgs.vscode-utils.extensionFromVscodeMarketplace {
+          publisher = "GitHub";
+          name = "copilot-chat";
+          version = "0.35.2";
+          sha256 = "11hkdgiwndj6pgxn5wgpryy9nbcbzcqv8ac7w226gznqyhdryi5r";
+        })
+        pkgs.vscode-marketplace.donjayamanne.githistory
+        pkgs.vscode-marketplace.openai.chatgpt
+      ];
     };
-    extensions = [
-      pkgs.vscode-marketplace.github.copilot
-      (pkgs.vscode-utils.extensionFromVscodeMarketplace {
-        publisher = "GitHub";
-        name = "copilot-chat";
-        version = "0.35.2";
-        sha256 = "11hkdgiwndj6pgxn5wgpryy9nbcbzcqv8ac7w226gznqyhdryi5r";
-      })
-      pkgs.vscode-marketplace.donjayamanne.githistory
-      pkgs.vscode-marketplace.openai.chatgpt
-    ];
   };
 
   # SPICE agent for VM auto-resize and clipboard

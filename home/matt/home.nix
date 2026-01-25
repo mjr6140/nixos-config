@@ -163,6 +163,10 @@ Hidden=true
     };
   };
 
+  imports = [
+    ./borgmatic.nix
+  ];
+
   xdg.configFile."autorestic/.autorestic.yml".source = ./autorestic.yml;
   xdg.configFile."autorestic/.password".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/autorestic/secrets/.password";

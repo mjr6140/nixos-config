@@ -1,0 +1,40 @@
+source_directories:
+  - /home/matt
+  - /mnt/storage/Photos
+repositories:
+  - path: ssh://borg@10.12.1.3/mnt/borg/mainrepo
+    label: main
+exclude_patterns:
+  - /home/matt/.cache
+  - /home/matt/.linuxbrew
+  - /home/matt/.local/share/containers
+  - /home/matt/.local/share/flatpak
+  - /home/matt/.local/share/Trash
+  - /home/matt/.steam/steam/steamapps/common
+  - /home/matt/.steam/steam/steamapps/shadercache
+  - /home/matt/.local/share/Steam/steamapps/common
+  - /home/matt/.local/share/Steam/steamapps/shadercache
+  - /home/matt/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/common
+  - /home/matt/.var/app/com.valvesoftware.Steam/data/Steam/steamapps/shadercache
+  - /home/matt/.var/app/*/cache
+  - /home/matt/.local/share/lutris
+  - /home/matt/.local/share/Steam
+  - /home/matt/.codeium
+  - /home/matt/.xlcore
+  - /home/matt/Downloads
+  - /home/matt/Games
+  - /home/matt/VirtualBox VMs
+  - '**/__pycache__/'
+  - '**/node_modules'
+  - '*.thumbnails'
+  - '*[Cc]ache*'
+  - '*[Tt]rash*'
+  - /home/matt/.config/Ankama*
+  - /home/matt/mnt
+  - /home/matt/Faugus
+exclude_caches: true
+encryption_passcommand: cat /home/matt/.config/borg/.borg-passphrase
+keep_daily: 7
+keep_weekly: 4
+keep_monthly: 6
+keep_yearly: 1

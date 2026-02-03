@@ -139,8 +139,8 @@ Hidden=true
         (pkgs.vscode-utils.extensionFromVscodeMarketplace {
           publisher = "GitHub";
           name = "copilot-chat";
-          version = "0.35.2";
-          sha256 = "11hkdgiwndj6pgxn5wgpryy9nbcbzcqv8ac7w226gznqyhdryi5r";
+          version = "0.36.2";
+          sha256 = "0hl3c6wqy6csvriak5x9c5inf2b8igwlmh5affyzqdrbx9qrp29v";
         })
         pkgs.vscode-marketplace.donjayamanne.githistory
         pkgs.vscode-marketplace.openai.chatgpt

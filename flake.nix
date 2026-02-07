@@ -51,6 +51,9 @@
             home-manager.backupFileExtension = "backup";
           }
           inputs.dms.nixosModules.dank-material-shell
+          ({ ... }: {
+            nixpkgs.overlays = [ (import ./overlays/faugus-fix.nix) ];
+          })
         ];
       };
 

@@ -12,6 +12,7 @@
   nixpkgs.config.allowUnfree = true;
   nixpkgs.overlays = [
     inputs.vscode-extensions.overlays.default
+    inputs.llm-agents.overlays.default
   ];
 
   # Locale & Time

@@ -42,7 +42,7 @@
     vlc
     
     # LLM Agents
-    codex
+    llm-agents.codex
     
     # GNOME Tools
     gnome-tweaks

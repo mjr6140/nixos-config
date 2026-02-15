@@ -52,7 +52,11 @@
           }
           inputs.dms.nixosModules.dank-material-shell
           ({ ... }: {
-            nixpkgs.overlays = [ (import ./overlays/faugus-fix.nix) ];
+            nixpkgs.overlays = [
+              (import ./overlays/faugus-fix.nix)
+              # Temporary: NVIDIA open 6.19 build fix. Remove once upstream lands.
+              (import ./overlays/nvidia-open-6.19-fix.nix)
+            ];
           })
         ];
       };

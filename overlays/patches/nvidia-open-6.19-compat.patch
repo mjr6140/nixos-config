@@ -1,0 +1,71 @@
+--- a/kernel-open/nvidia-uvm/uvm_hmm.c
++++ b/kernel-open/nvidia-uvm/uvm_hmm.c
+@@ -2140,7 +2140,7 @@
+ 
+         UVM_ASSERT(!page_count(dpage));
+         UVM_ASSERT(!dpage->zone_device_data);
+-        zone_device_page_init(dpage);
++        zone_device_page_init(dpage, page_pgmap(dpage), compound_order(dpage));
+         dpage->zone_device_data = gpu_chunk;
+         atomic64_inc(&va_block->hmm.va_space->hmm.allocated_page_count);
+     }
+--- a/kernel-open/nvidia-uvm/uvm_pmm_gpu.c
++++ b/kernel-open/nvidia-uvm/uvm_pmm_gpu.c
+@@ -3042,6 +3042,11 @@
+                                  &gpu->pmm.root_chunks.va_block_lazy_free_q_item);
+ }
+ 
++static void devmem_folio_free(struct folio *folio)
++{
++    devmem_page_free(&folio->page);
++}
++
+ // This is called by HMM when the CPU faults on a ZONE_DEVICE private entry.
+ static vm_fault_t devmem_fault(struct vm_fault *vmf)
+ {
+@@ -3060,7 +3065,7 @@
+ 
+ static const struct dev_pagemap_ops uvm_pmm_devmem_ops =
+ {
+-    .page_free = devmem_page_free,
++    .folio_free = devmem_folio_free,
+     .migrate_to_ram = devmem_fault_entry,
+ };
+ 
+@@ -3155,6 +3160,11 @@
+     page->zone_device_data = NULL;
+     nv_kref_put(&p2p_mem->refcount, device_p2p_page_free_wake);
+ }
++
++static void device_p2p_folio_free(struct folio *folio)
++{
++    device_p2p_page_free(&folio->page);
++}
+ #endif
+ 
+ #if UVM_CDMM_PAGES_SUPPORTED()
+@@ -3163,9 +3173,14 @@
+     device_p2p_page_free(page);
+ }
+ 
++static void device_coherent_folio_free(struct folio *folio)
++{
++    device_coherent_page_free(&folio->page);
++}
++
+ static const struct dev_pagemap_ops uvm_device_coherent_pgmap_ops =
+ {
+-    .page_free = device_coherent_page_free,
++    .folio_free = device_coherent_folio_free,
+ };
+ 
+ static NV_STATUS uvm_pmm_cdmm_init(uvm_parent_gpu_t *parent_gpu)
+@@ -3302,7 +3317,7 @@
+ 
+ static const struct dev_pagemap_ops uvm_device_p2p_pgmap_ops =
+ {
+-    .page_free = device_p2p_page_free,
++    .folio_free = device_p2p_folio_free,
+ };
+ 
+ void uvm_pmm_gpu_device_p2p_init(uvm_parent_gpu_t *parent_gpu)

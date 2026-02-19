@@ -15,6 +15,12 @@
   # Kernel (Latest stable)
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
+  # SCX scheduler
+  services.scx = {
+    enable = true;
+    scheduler = "scx_lavd";
+  };
+
   # Graphics & Nvidia (desktop-specific)
   boot.blacklistedKernelModules = [ "nouveau" ];
   services.xserver.videoDrivers = ["nvidia"];

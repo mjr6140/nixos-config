@@ -9,6 +9,7 @@
     brave
     thunderbird
     discord-ptb
+    firefox
     
     # Gaming
     lutris

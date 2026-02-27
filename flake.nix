@@ -56,6 +56,8 @@
               (import ./overlays/faugus-fix.nix)
               # Temporary: NVIDIA open 6.19 build fix. Remove once upstream lands.
               (import ./overlays/nvidia-open-6.19-fix.nix)
+              # Temporary: unstable regressions in picosvg tests and khal docs.
+              (import ./overlays/python-pins.nix)
             ];
           })
         ];

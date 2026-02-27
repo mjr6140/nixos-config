@@ -10,9 +10,11 @@
     thunderbird
     discord-ptb
     firefox
+    eddie
     
     # Gaming
     lutris
+    wowup-cf
     # Replaced by flatpak version
     # rusty-path-of-building
     xivlauncher

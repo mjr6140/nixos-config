@@ -112,6 +112,12 @@
     cores = 0;  # Use all available cores
     auto-optimise-store = true;
 
+    # Binary caches
+    extra-substituters = [ "https://cache.numtide.com" ];
+    extra-trusted-public-keys = [
+      "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
+    ];
+
     # Trusted users for binary cache
     trusted-users = [ "root" "@wheel" ];
   };

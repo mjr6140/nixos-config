@@ -53,6 +53,7 @@
 
     # Misc
     obsidian
+    wol
 
     # Backup Tools
     restic

@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, pkgs, inputs, nixpkgsInput, ... }:
 
 {
   # Imports
@@ -6,6 +6,7 @@
     ./hardware-configuration.nix
     ../../modules/common.nix
     ../../modules/desktop.nix
+    ../../modules/llama-cpp-desktop.nix
     ../../modules/packages-desktop.nix
   ];
 
@@ -18,7 +19,7 @@
   # SCX scheduler
   services.scx = {
     enable = true;
-    scheduler = "scx_lavd";
+    scheduler = "scx_bpfland";
   };
 
   # Graphics & Nvidia (desktop-specific)

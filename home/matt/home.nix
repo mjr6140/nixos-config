@@ -172,6 +172,34 @@ Hidden=true
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/autorestic/secrets/.password";
   xdg.configFile."autorestic/healthchecks.env".source =
     config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/autorestic/secrets/healthchecks.env";
+  xdg.configFile."opencode/opencode.json".text = builtins.toJSON {
+    "$schema" = "https://opencode.ai/config.json";
+    compaction = {
+      auto = true;
+      prune = true;
+      reserved = 4000;
+    };
+    provider = {
+      "llama.cpp" = {
+        npm = "@ai-sdk/openai-compatible";
+        name = "llama.cpp (local)";
+        options = {
+          baseURL = "http://127.0.0.1:8080/v1";
+        };
+        models = {
+          "qwen3-coder" = {
+            name = "Qwen3 Coder A3B (local)";
+            limit = {
+              context = 32768;
+              output = 4096;
+            };
+          };
+        };
+      };
+    };
+    model = "llama.cpp/qwen3-coder";
+    small_model = "llama.cpp/qwen3-coder";
+  };
 
   systemd.user.services.autorestic-backup = {
     Unit = {

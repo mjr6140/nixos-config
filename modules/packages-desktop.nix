@@ -1,5 +1,5 @@
 # System-wide packages for desktop and desktop-like VM hosts.
-{ pkgs, ... }:
+{ pkgs, nixpkgsInput, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -24,6 +24,8 @@
     direnv
     nix-direnv
     vscode
+    opencode
+    python3Packages.huggingface-hub
 
     # Nix Tools
     nvd

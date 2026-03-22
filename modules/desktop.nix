@@ -1,8 +1,39 @@
 # Desktop environment configuration
-# Includes: GNOME, GDM, Niri, DankMaterialShell, and GNOME optimizations
-{ config, pkgs, ... }:
+# Includes: GNOME, GDM, Niri, desktop services, desktop fonts, and
+# workstation-specific overlays
+{ config, pkgs, inputs, ... }:
 
 {
+  nixpkgs.overlays = [
+    inputs.vscode-extensions.overlays.default
+    inputs.llm-agents.overlays.default
+  ];
+
+  # Fonts
+  fonts.packages = with pkgs; [
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
+    fira-code
+    fira-code-symbols
+    jetbrains-mono
+  ];
+  fonts.fontconfig.defaultFonts = {
+    monospace = [ "JetBrains Mono" ];
+    sansSerif = [ "Noto Sans" ];
+    serif = [ "Noto Serif" ];
+  };
+
+  # Graphics (basic)
+  hardware.graphics.enable = true;
+
+  # Audio (PipeWire)
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    pulse.enable = true;
+  };
+
   # Desktop & Login
   services.xserver.enable = true;
   services.displayManager.gdm.enable = true;
@@ -17,6 +48,13 @@
     gnome-browser-connector.enable = true;
   };
 
+  # XDG Portals
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
+    config.common.default = "*";
+  };
+
   # Exclude unwanted GNOME apps
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
@@ -25,8 +63,30 @@
     geary     # Email client (using Thunderbird)
   ];
 
-  # XDG Desktop Portal configuration
-  xdg.portal.config.common.default = "*";
+  # Virtualisation & Containers
+  virtualisation.libvirtd.enable = true;
+  programs.virt-manager.enable = true;
+  virtualisation.docker.enable = true;
+
+  users.users.matt.extraGroups = [ "libvirtd" "docker" ];
+
+  # Hardware and desktop-adjacent services
+  services.printing.enable = true;
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+  };
+  security.polkit.enable = true;
+  security.rtkit.enable = true;  # For PipeWire real-time priority
+  programs.nix-ld.enable = true;
+
+  # For GSConnect (GNOME phone integration)
+  networking.firewall.allowedTCPPortRanges = [
+    { from = 1714; to = 1764; }
+  ];
+  networking.firewall.allowedUDPPortRanges = [
+    { from = 1714; to = 1764; }
+  ];
 
   # Gaming (shared across all desktop-like hosts)
   programs.steam.enable = true;

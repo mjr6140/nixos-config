@@ -231,6 +231,15 @@ Before installing on physical hardware, you can test this configuration in a KVM
 - Existing Linux host with `virt-manager` and `libvirtd` enabled.
 - The repository cloned to the host.
 
+For the fileserver VM, you can use the fully automated helper script:
+```bash
+scripts/create-fileserver-vm.sh --recreate
+```
+
+That builds a bootable VM image from the flake, creates a libvirt VM with one
+system disk plus pre-labeled data/parity disks, and imports it directly. No
+installer ISO or manual `nixos-install` step is required.
+
 ### 2. Configure VM
 In `virt-manager`, create a new VM:
 - **CPU**: At least 2 cores.

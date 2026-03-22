@@ -1,9 +1,7 @@
-# System-wide packages shared across all hosts
-# Add new applications here to make them available on both desktop and VM
-{ config, pkgs, ... }:
+# System-wide packages for desktop and desktop-like VM hosts.
+{ pkgs, ... }:
 
 {
-  # System-wide packages shared across all hosts
   environment.systemPackages = with pkgs; [
     # Browsers & Communication
     brave
@@ -11,7 +9,7 @@
     discord-ptb
     firefox
     eddie
-    
+
     # Gaming
     lutris
     wowup-cf
@@ -19,34 +17,34 @@
     # rusty-path-of-building
     xivlauncher
     faugus-launcher
-    
+
     # Development Tools
     vim
     git
     direnv
     nix-direnv
     vscode
-    
+
     # Nix Tools
     nvd
 
     # Niri deps
     alacritty
-    fuzzel 
-    swaylock 
-    mako 
-    swayidle    
+    fuzzel
+    swaylock
+    mako
+    swayidle
 
     # Virtualization and Containerization
     distrobox
     distroshelf
-    
+
     # Media
     vlc
-    
+
     # LLM Agents
     llm-agents.codex
-    
+
     # GNOME Tools
     gnome-tweaks
     gnome-extension-manager

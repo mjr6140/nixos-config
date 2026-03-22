@@ -6,7 +6,7 @@
     ./hardware-configuration.nix
     ../../modules/common.nix
     ../../modules/desktop.nix
-    ../../modules/packages.nix
+    ../../modules/packages-desktop.nix
   ];
 
   # Networking (host-specific)

@@ -1,6 +1,6 @@
 # NixOS Configuration
 
-Flake-based NixOS configuration for gaming and development workstations.
+Flake-based NixOS configuration with unstable desktop hosts and a stable server VM track.
 
 ## Common Tasks
 
@@ -34,8 +34,11 @@ nvd diff /run/current-system result
 
 ### Add a System Package (all users)
 ```bash
-# Edit modules/packages.nix
-vim modules/packages.nix
+# Desktop hosts: edit modules/packages-desktop.nix
+vim modules/packages-desktop.nix
+
+# Server hosts: edit modules/packages-server.nix
+vim modules/packages-server.nix
 
 # Add to environment.systemPackages, then rebuild
 sudo nixos-rebuild switch --flake .#nixos-desktop
@@ -76,6 +79,8 @@ Add the host to `flake.nix`, following the existing pattern, then:
 sudo nixos-rebuild switch --flake .#new-hostname
 ```
 
+For server-like hosts, prefer importing `server.nix` and `packages-server.nix`.
+
 ### Roll Back
 ```bash
 # List generations
@@ -112,6 +117,11 @@ nix fmt
 └── docs/                     # Supporting documentation
 ```
 
+Current host roles:
+- `nixos-desktop`: unstable desktop/workstation
+- `nixos-vm`: unstable desktop VM
+- `nixos-fileserver-vm`: stable server VM
+
 ## Documentation
 
 - **[Installation Guide](docs/install-plan.md)**: Disk setup and first boot
@@ -124,8 +134,11 @@ nix fmt
 # Validate the flake
 nix flake check
 
-# Build VM configuration
+# Build desktop VM configuration
 sudo nixos-rebuild switch --flake .#nixos-vm
+
+# Build server VM configuration
+sudo nixos-rebuild switch --flake .#nixos-fileserver-vm
 ```
 
 ## Useful Links

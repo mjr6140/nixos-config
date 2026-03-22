@@ -43,7 +43,9 @@ in
     fsType = "ext4";
   };
 
-  systemd.tmpfiles.rules = map (dir: "d ${dir} 0755 root root - -") dataDirs;
+  systemd.tmpfiles.rules =
+    [ "d /var/lib/snapraid 0755 root root - -" ]
+    ++ map (dir: "d ${dir} 0755 root root - -") dataDirs;
 
   fileSystems."/srv/storage" = {
     device = builtins.concatStringsSep ":" dataDirs;
@@ -57,7 +59,7 @@ in
       "dropcacheonclose=true"
       "category.create=mfs"
       "moveonenospc=true"
-      "minfreespace=50G"
+      "minfreespace=1G"
       "fsname=mergerfs"
     ];
   };

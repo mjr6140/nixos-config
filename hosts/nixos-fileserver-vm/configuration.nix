@@ -5,6 +5,7 @@
     ./hardware-configuration.nix
     ./storage.nix
     ../../modules/common.nix
+    ../../modules/samba-fileserver.nix
     ../../modules/server.nix
     ../../modules/packages-server.nix
   ];

@@ -1,8 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports = [
     ./hardware-configuration.nix
+    ./storage.nix
     ../../modules/common.nix
     ../../modules/server.nix
     ../../modules/packages-server.nix
@@ -14,6 +15,15 @@
 
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
+
+  virtualisation.vmVariantWithBootLoader = {
+    services.btrfs.autoScrub = {
+      enable = lib.mkForce false;
+      fileSystems = lib.mkForce [ ];
+    };
+    virtualisation.diskSize = lib.mkForce (40 * 1024);
+    virtualisation.sharedDirectories = lib.mkForce { };
+  };
 
   system.stateVersion = "25.11";
 }

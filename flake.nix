@@ -3,6 +3,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.11";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -28,7 +29,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, dms, antigravity, claude-desktop, llm-agents, vscode-extensions, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, dms, antigravity, claude-desktop, llm-agents, vscode-extensions, ... }@inputs:
     let
       system = "x86_64-linux";
       # VM-only overlay for Path of Building software rendering
@@ -39,7 +40,10 @@
     {
       nixosConfigurations.nixos-desktop = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs; };
+        specialArgs = {
+          inherit inputs;
+          nixpkgsInput = inputs.nixpkgs;
+        };
         modules = [
           ./hosts/nixos-desktop/configuration.nix
           home-manager.nixosModules.home-manager
@@ -63,7 +67,10 @@
 
       nixosConfigurations.nixos-vm = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs; };
+        specialArgs = {
+          inherit inputs;
+          nixpkgsInput = inputs.nixpkgs;
+        };
         modules = [
           ./hosts/nixos-vm/configuration.nix
           ({ ... }: {
@@ -78,6 +85,17 @@
             home-manager.backupFileExtension = "backup";
           }
           inputs.dms.nixosModules.dank-material-shell
+        ];
+      };
+
+      nixosConfigurations.nixos-fileserver-vm = nixpkgs-stable.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs;
+          nixpkgsInput = inputs.nixpkgs-stable;
+        };
+        modules = [
+          ./hosts/nixos-fileserver-vm/configuration.nix
         ];
       };
 

@@ -21,7 +21,7 @@
 
 ## Coding Style & Naming Conventions
 - Nix files are formatted with `nix fmt` (do not hand-format).
-- Keep module names descriptive and lowercase (e.g., `desktop.nix`, `packages.nix`).
+- Keep module names descriptive and lowercase (e.g., `desktop.nix`, `packages-desktop.nix`).
 - Host directories match hostnames (e.g., `hosts/nixos-vm/`).
 - Prefer small, focused modules and document non-obvious options inline.
 

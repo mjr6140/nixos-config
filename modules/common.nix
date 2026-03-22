@@ -1,7 +1,7 @@
 # Common system configuration shared across all hosts
-# Includes: bootloader, locale, fonts, audio, graphics, networking, users,
-# virtualisation, hardware services, security hardening, and maintenance
-{ config, pkgs, inputs, ... }:
+# Includes: bootloader, locale, base networking, users, SSH, security
+# hardening, and maintenance
+{ config, pkgs, inputs, nixpkgsInput, ... }:
 
 {
   # Bootloader (common settings)
@@ -10,55 +10,15 @@
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
-  nixpkgs.overlays = [
-    inputs.vscode-extensions.overlays.default
-    inputs.llm-agents.overlays.default
-  ];
 
   # Locale & Time
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  # Fonts
-  fonts.packages = with pkgs; [
-    noto-fonts
-    noto-fonts-cjk-sans
-    noto-fonts-color-emoji
-    fira-code
-    fira-code-symbols
-    jetbrains-mono
-  ];
-  fonts.fontconfig.defaultFonts = {
-    monospace = [ "JetBrains Mono" ];
-    sansSerif = [ "Noto Sans" ];
-    serif = [ "Noto Serif" ];
-  };
-
-  # Graphics (basic)
-  hardware.graphics.enable = true;
-
-  # Audio (PipeWire)
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    pulse.enable = true;
-  };
-
-  # XDG Portals
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
-  };
-
-  # Virtualisation & Containers
-  virtualisation.libvirtd.enable = true;
-  programs.virt-manager.enable = true;
-  virtualisation.docker.enable = true;
-
   # Users
   users.users.matt = {
     isNormalUser = true;
-    extraGroups = [ "wheel" "networkmanager" "libvirtd" "docker" ];
+    extraGroups = [ "wheel" "networkmanager" ];
   };
 
   # SSH (secure configuration)
@@ -72,16 +32,8 @@
 
   # Hardware Services
   services.fwupd.enable = true;
-  services.printing.enable = true;
-  services.avahi = {
-    enable = true;
-    nssmdns4 = true;
-  };
-
   # Security hardening
   security.sudo.wheelNeedsPassword = true;
-  security.polkit.enable = true;
-  security.rtkit.enable = true;  # For PipeWire real-time priority
 
   # Kernel hardening
   boot.kernel.sysctl = {
@@ -121,8 +73,8 @@
     # Trusted users for binary cache
     trusted-users = [ "root" "@wheel" ];
   };
-  nix.registry.nixpkgs.flake = inputs.nixpkgs;
-  nix.nixPath = [ "nixpkgs=${inputs.nixpkgs}" ];
+  nix.registry.nixpkgs.flake = nixpkgsInput;
+  nix.nixPath = [ "nixpkgs=${nixpkgsInput}" ];
   nix.gc = {
     automatic = true;
     dates = "weekly";
@@ -130,7 +82,6 @@
   };
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
-  programs.nix-ld.enable = true;
 
   # Networking (NetworkManager)
   networking.networkmanager.enable = true;
@@ -140,12 +91,5 @@
     enable = true;
     allowedTCPPorts = [ 22 ];  # SSH
     allowedUDPPorts = [ ];
-    # For GSConnect (GNOME phone integration)
-    allowedTCPPortRanges = [ 
-      { from = 1714; to = 1764; }
-    ];
-    allowedUDPPortRanges = [ 
-      { from = 1714; to = 1764; }
-    ];
   };
 }

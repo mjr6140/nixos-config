@@ -5,15 +5,11 @@ This directory contains shared configuration modules used across multiple hosts.
 ## Module Structure
 
 ### `common.nix`
-Contains all shared system configuration:
+Contains base system configuration shared across hosts:
 - Bootloader settings
 - Locale and timezone
-- Fonts
-- Audio (PipeWire)
-- Graphics basics and XDG portals
-- Virtualisation (libvirt, Docker)
 - User accounts
-- Hardware services (fwupd, printing, Avahi)
+- Core hardware services (fwupd)
 - Nix settings (flakes, garbage collection, etc.)
 - Security hardening, firewall, and maintenance
 
@@ -23,30 +19,57 @@ Desktop environment configuration:
 - GDM display manager
 - Niri window manager
 - DankMaterialShell
+- Desktop fonts and overlays
+- Audio, graphics, and XDG portals
+- Desktop-adjacent services (printing, Avahi, libvirt, Docker)
 - Flatpak/Flathub setup
 - Gaming (Steam, GameMode)
 
-### `packages.nix`
-**This is where you add new applications!**
+### `server.nix`
+Server-oriented defaults:
+- Headless/server-specific settings
+- Small overrides that should apply to server hosts but not desktops
 
-All system-wide packages that should be available on both hosts. When you want to add a new app, just add it to the `environment.systemPackages` list in this file.
+### `packages-desktop.nix`
+Desktop and desktop-VM system packages:
+- Browsers and communication tools
+- Workstation apps
+- Gaming launchers
+- Desktop utilities
+
+### `packages-server.nix`
+Server and headless-host system packages:
+- Admin tools
+- Backup tools
+- Minimal shared CLI utilities
 
 ## Usage
 
-Both `nixos-vm` and `nixos-desktop` import these modules in their `configuration.nix`:
+Desktop hosts import the desktop modules:
 
 ```nix
 imports = [
   ./hardware-configuration.nix
   ../../modules/common.nix
   ../../modules/desktop.nix
-  ../../modules/packages.nix
+  ../../modules/packages-desktop.nix
 ];
 ```
 
-## Adding New Applications
+Server hosts import the server modules:
 
-To add a new application to both hosts, edit `packages.nix`:
+```nix
+imports = [
+  ./hardware-configuration.nix
+  ../../modules/common.nix
+  ../../modules/server.nix
+  ../../modules/packages-server.nix
+];
+```
+
+## Adding New Packages
+
+To add a desktop application, edit `packages-desktop.nix`:
 
 ```nix
 environment.systemPackages = with pkgs; [
@@ -55,16 +78,18 @@ environment.systemPackages = with pkgs; [
 ];
 ```
 
-Then rebuild:
+To add a server package, edit `packages-server.nix`.
+
+Then rebuild the relevant host:
 ```bash
-sudo nixos-rebuild switch --flake .#nixos-vm
-# or
 sudo nixos-rebuild switch --flake .#nixos-desktop
+# or
+sudo nixos-rebuild switch --flake .#nixos-fileserver-vm
 ```
 
 ## Host-Specific Configuration
 
 Each host's `configuration.nix` now only contains:
 - Hostname
-- Hardware-specific settings (kernel, graphics drivers, etc.)
-- Host-specific features (VM tools, gaming, Bluetooth, etc.)
+- Hardware-specific settings
+- Host-specific features (VM tools, graphics drivers, Bluetooth, etc.)

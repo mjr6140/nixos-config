@@ -1,21 +1,17 @@
-{ config, pkgs, inputs, ... }:
+{ pkgs, ... }:
 
 {
-  # Imports
   imports = [
     ./hardware-configuration.nix
     ../../modules/common.nix
-    ../../modules/desktop.nix
-    ../../modules/packages-desktop.nix
+    ../../modules/server.nix
+    ../../modules/packages-server.nix
   ];
 
-  # Networking (host-specific)
-  networking.hostName = "nixos-vm";
+  networking.hostName = "nixos-fileserver-vm";
 
-  # Kernel (Latest for VM)
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  # KVM Guest Tools (VM-specific)
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
 

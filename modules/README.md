@@ -43,6 +43,18 @@ Server and headless-host system packages:
 - Backup tools
 - Minimal shared CLI utilities
 
+### `samba-fileserver.nix`
+Fileserver SMB sharing:
+- Samba shares and WSDD discovery
+- Share group and directory permissions
+- Share bootstrap directories and service defaults
+
+### `snapraid-healthchecks.nix`
+SnapRAID healthcheck integration:
+- agenix-managed environment secret wiring
+- SnapRAID sync/scrub wrappers with Healthchecks pings
+- Service overrides to preserve network access for ping delivery
+
 ## Usage
 
 Desktop hosts import the desktop modules:
@@ -62,6 +74,8 @@ Server hosts import the server modules:
 imports = [
   ./hardware-configuration.nix
   ../../modules/common.nix
+  ../../modules/samba-fileserver.nix
+  ../../modules/snapraid-healthchecks.nix
   ../../modules/server.nix
   ../../modules/packages-server.nix
 ];

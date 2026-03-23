@@ -20,6 +20,10 @@
       url = "github:k3d3/claude-desktop-linux-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -29,7 +33,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, dms, antigravity, claude-desktop, llm-agents, vscode-extensions, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, dms, antigravity, claude-desktop, agenix, llm-agents, vscode-extensions, ... }@inputs:
     let
       system = "x86_64-linux";
       # VM-only overlay for Path of Building software rendering
@@ -95,6 +99,7 @@
           nixpkgsInput = inputs.nixpkgs-stable;
         };
         modules = [
+          agenix.nixosModules.default
           ./hosts/nixos-fileserver-vm/configuration.nix
         ];
       };

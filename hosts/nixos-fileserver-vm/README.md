@@ -84,6 +84,41 @@ sudo snapraid --force-empty sync
 
 Use that only when you are intentionally establishing a new baseline.
 
+## Healthchecks
+
+SnapRAID `sync` and `scrub` are wrapped to optionally ping Healthchecks.io.
+
+Secret handling:
+
+- encrypted secret file: `secrets/snapraid-healthchecks.env.age`
+- recipient mapping: `secrets/secrets.nix`
+- VM identity path: `/var/lib/agenix/identity`
+- runtime path on the host: `/run/agenix/snapraid-healthchecks-env`
+
+Expected environment variables:
+
+```sh
+HC_SNAPRAID_SYNC_URL=
+HC_SNAPRAID_SCRUB_URL=
+```
+
+If those variables are left blank, the jobs run normally and skip Healthchecks pings.
+
+Edit the secret from the `secrets/` directory with an SSH key converted to an age identity:
+
+```sh
+cd /home/matt/nixos-config/secrets
+RULES=./secrets.nix agenix -i <(ssh-to-age -private-key -i ~/.ssh/id_ed25519) -e snapraid-healthchecks.env.age
+```
+
+For the disposable fileserver VM, the dedicated age identity is copied in by `scripts/create-fileserver-vm.sh` from:
+
+```sh
+/home/matt/.local/share/nixos-fileserver-vm/agenix/identity
+```
+
+The VM creation script bootstraps access with your SSH public key, installs the dedicated agenix identity, and re-runs activation so `/run/agenix/*` secrets are materialized on first boot.
+
 ## Rebuild
 
 Apply this host config with:

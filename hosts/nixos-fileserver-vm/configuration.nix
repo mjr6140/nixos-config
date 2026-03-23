@@ -6,6 +6,7 @@
     ./storage.nix
     ../../modules/common.nix
     ../../modules/samba-fileserver.nix
+    ../../modules/snapraid-healthchecks.nix
     ../../modules/server.nix
     ../../modules/packages-server.nix
   ];

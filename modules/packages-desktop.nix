@@ -1,5 +1,5 @@
 # System-wide packages for desktop and desktop-like VM hosts.
-{ pkgs, nixpkgsInput, ... }:
+{ pkgs, inputs, nixpkgsInput, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -29,6 +29,7 @@
 
     # Nix Tools
     nvd
+    inputs.agenix.packages.${pkgs.system}.default
 
     # Niri deps
     alacritty

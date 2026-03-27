@@ -133,9 +133,17 @@ Hidden=true
     profiles.default = {
       userSettings = {
         "git.autofetch" = true;
+        "[rust]" = {
+          "editor.defaultFormatter" = "rust-lang.rust-analyzer";
+        };
+        "rust-analyzer.check.command" = "clippy";
+        "rust-analyzer.cargo.features" = "all";
       };
       extensions = [
         pkgs.vscode-marketplace.github.copilot
+        pkgs.vscode-marketplace."rust-lang"."rust-analyzer"
+        pkgs.vscode-marketplace-universal.vadimcn."vscode-lldb"
+        pkgs.vscode-marketplace.tamasfe."even-better-toml"
         (pkgs.vscode-utils.extensionFromVscodeMarketplace {
           publisher = "GitHub";
           name = "copilot-chat";

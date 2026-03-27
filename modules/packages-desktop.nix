@@ -26,6 +26,7 @@
     vscode
     opencode
     python3Packages.huggingface-hub
+    ripgrep
 
     # Nix Tools
     nvd

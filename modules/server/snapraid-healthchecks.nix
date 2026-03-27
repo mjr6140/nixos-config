@@ -49,7 +49,7 @@ in
   age.identityPaths = [ "/var/lib/agenix/identity" ];
 
   age.secrets.snapraid-healthchecks-env = {
-    file = ../secrets/snapraid-healthchecks.env.age;
+    file = ../../secrets/snapraid-healthchecks.env.age;
     owner = "root";
     group = "root";
     mode = "0400";

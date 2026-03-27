@@ -25,7 +25,7 @@ Desktop environment configuration:
 - Flatpak/Flathub setup
 - Gaming (Steam, GameMode)
 
-### `server.nix`
+### `server/default.nix`
 Server-oriented defaults:
 - Headless/server-specific settings
 - Small overrides that should apply to server hosts but not desktops
@@ -37,23 +37,35 @@ Desktop and desktop-VM system packages:
 - Gaming launchers
 - Desktop utilities
 
-### `packages-server.nix`
+### `server/packages.nix`
 Server and headless-host system packages:
 - Admin tools
 - Backup tools
 - Minimal shared CLI utilities
 
-### `samba-fileserver.nix`
+### `server/samba-fileserver.nix`
 Fileserver SMB sharing:
 - Samba shares and WSDD discovery
 - Share group and directory permissions
 - Share bootstrap directories and service defaults
 
-### `snapraid-healthchecks.nix`
+### `server/snapraid-healthchecks.nix`
 SnapRAID healthcheck integration:
 - agenix-managed environment secret wiring
 - SnapRAID sync/scrub wrappers with Healthchecks pings
 - Service overrides to preserve network access for ping delivery
+
+### `server/docker-host.nix`
+Docker-host defaults:
+- Docker daemon configuration
+- Compose/NAS mount tooling
+- Shared `/srv/...` directory scaffold
+
+### `server/observability-host.nix`
+Observability-host defaults:
+- Prometheus
+- Grafana
+- cAdvisor and node exporter scraping
 
 ## Usage
 
@@ -74,10 +86,10 @@ Server hosts import the server modules:
 imports = [
   ./hardware-configuration.nix
   ../../modules/common.nix
-  ../../modules/samba-fileserver.nix
-  ../../modules/snapraid-healthchecks.nix
-  ../../modules/server.nix
-  ../../modules/packages-server.nix
+  ../../modules/server/samba-fileserver.nix
+  ../../modules/server/snapraid-healthchecks.nix
+  ../../modules/server/default.nix
+  ../../modules/server/packages.nix
 ];
 ```
 
@@ -92,7 +104,7 @@ environment.systemPackages = with pkgs; [
 ];
 ```
 
-To add a server package, edit `packages-server.nix`.
+To add a server package, edit `server/packages.nix`.
 
 Then rebuild the relevant host:
 ```bash

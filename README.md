@@ -37,8 +37,8 @@ nvd diff /run/current-system result
 # Desktop hosts: edit modules/packages-desktop.nix
 vim modules/packages-desktop.nix
 
-# Server hosts: edit modules/packages-server.nix
-vim modules/packages-server.nix
+# Server hosts: edit modules/server/packages.nix
+vim modules/server/packages.nix
 
 # Add to environment.systemPackages, then rebuild
 sudo nixos-rebuild switch --flake .#nixos-desktop
@@ -79,7 +79,7 @@ Add the host to `flake.nix`, following the existing pattern, then:
 sudo nixos-rebuild switch --flake .#new-hostname
 ```
 
-For server-like hosts, prefer importing `server.nix` and `packages-server.nix`.
+For server-like hosts, prefer importing `server/default.nix` and `server/packages.nix`.
 
 ### Roll Back
 ```bash
@@ -121,6 +121,8 @@ Current host roles:
 - `nixos-desktop`: unstable desktop/workstation
 - `nixos-vm`: unstable desktop VM
 - `nixos-fileserver-vm`: stable server VM
+- `nixos-minipc`: stable mini PC app host
+- `nixos-minipc-vm`: stable mini PC test VM
 
 ## Documentation
 
@@ -139,6 +141,9 @@ sudo nixos-rebuild switch --flake .#nixos-vm
 
 # Build server VM configuration
 sudo nixos-rebuild switch --flake .#nixos-fileserver-vm
+
+# Build mini PC VM configuration
+sudo nixos-rebuild switch --flake .#nixos-minipc-vm
 ```
 
 ## Useful Links

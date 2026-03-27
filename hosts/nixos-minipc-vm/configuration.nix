@@ -3,15 +3,15 @@
 {
   imports = [
     ./hardware-configuration.nix
-    ./storage.nix
     ../../modules/common.nix
-    ../../modules/server/samba-fileserver.nix
-    ../../modules/server/snapraid-healthchecks.nix
+    ../../modules/server/docker-host.nix
+    ../../modules/server/observability-host.nix
+    ../../modules/server/pihole.nix
     ../../modules/server/default.nix
     ../../modules/server/packages.nix
   ];
 
-  networking.hostName = "nixos-fileserver-vm";
+  networking.hostName = "nixos-minipc-vm";
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 

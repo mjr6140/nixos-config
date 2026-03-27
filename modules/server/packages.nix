@@ -7,9 +7,11 @@
     git
     direnv
     nix-direnv
+    lm_sensors
     nvd
     wol
     restic
     borgbackup
+    smartmontools
   ];
 }

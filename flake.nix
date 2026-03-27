@@ -104,6 +104,30 @@
         ];
       };
 
+      nixosConfigurations.nixos-minipc = nixpkgs-stable.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs;
+          nixpkgsInput = inputs.nixpkgs-stable;
+        };
+        modules = [
+          agenix.nixosModules.default
+          ./hosts/nixos-minipc/configuration.nix
+        ];
+      };
+
+      nixosConfigurations.nixos-minipc-vm = nixpkgs-stable.lib.nixosSystem {
+        inherit system;
+        specialArgs = {
+          inherit inputs;
+          nixpkgsInput = inputs.nixpkgs-stable;
+        };
+        modules = [
+          agenix.nixosModules.default
+          ./hosts/nixos-minipc-vm/configuration.nix
+        ];
+      };
+
       # Formatter for `nix fmt`
       formatter.${system} = nixpkgs.legacyPackages.${system}.nixpkgs-fmt;
     };

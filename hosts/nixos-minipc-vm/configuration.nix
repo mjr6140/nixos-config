@@ -13,6 +13,14 @@
 
   networking.hostName = "nixos-minipc-vm";
 
+  age.identityPaths = [ "/var/lib/agenix/identity" ];
+  age.secrets.pihole-web-password = {
+    file = ../../secrets/pihole-web-password.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.qemuGuest.enable = true;

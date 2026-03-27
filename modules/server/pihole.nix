@@ -3,20 +3,42 @@
 let
   composeDir = "/srv/compose/pihole";
   composeFile = "${composeDir}/compose.yaml";
-  composeFileSource = ../../hosts/nixos-minipc/compose/pihole/compose.yaml;
   envFile = "${composeDir}/pihole.env";
-  envFileSource = pkgs.writeText "pihole.env" ''
-    # Leave the password unset for now; Pi-hole will generate one on first boot
-    # and print it to the container logs. Replace this later with a secret-backed
-    # FTLCONF_webserver_api_password or WEBPASSWORD_FILE workflow.
-    TZ=${config.time.timeZone}
-    FTLCONF_dns_listeningMode=all
-    FTLCONF_dns_upstreams=1.1.1.1;1.0.0.1
-    FTLCONF_webserver_port=8081
-  '';
+  secretName = "pihole-web-password";
+  hasWebPasswordSecret = builtins.hasAttr secretName config.age.secrets;
+  envDefaults = {
+    TZ = config.time.timeZone;
+    FTLCONF_dns_listeningMode = "all";
+    FTLCONF_dns_upstreams = "1.1.1.1;1.0.0.1";
+    FTLCONF_webserver_port = "8081";
+  };
+  envDefaultsText = lib.generators.toKeyValue { } envDefaults;
+  envDefaultsFile = pkgs.writeText "pihole.env.defaults" envDefaultsText;
+  composeSpec = {
+    services.pihole = {
+      container_name = "pihole";
+      image = "pihole/pihole:latest";
+      network_mode = "host";
+      restart = "unless-stopped";
+      env_file = [ envFile ];
+      volumes = [
+        "/srv/appdata/pihole/etc-pihole:/etc/pihole"
+        "/srv/appdata/pihole/etc-dnsmasq.d:/etc/dnsmasq.d"
+      ];
+    };
+  };
+  composeFileSource = (pkgs.formats.yaml { }).generate "pihole-compose.yaml" composeSpec;
   projectName = "pihole";
   dockerCmd = lib.getExe config.virtualisation.docker.package;
   composeCmd = "${dockerCmd} compose --project-name ${projectName} --file ${composeFile}";
+  renderEnvScript = pkgs.writeShellScript "render-pihole-env" ''
+    install -d -m 0755 ${composeDir}
+    cp ${envDefaultsFile} ${envFile}
+    ${lib.optionalString hasWebPasswordSecret ''
+    printf '%s\n' "FTLCONF_webserver_api_password=$(cat ${config.age.secrets.${secretName}.path})" >> ${envFile}
+    ''}
+    chmod 0600 ${envFile}
+  '';
 in
 {
   systemd.tmpfiles.rules = [
@@ -25,7 +47,6 @@ in
     "d /srv/appdata/pihole/etc-pihole 0755 root root - -"
     "d /srv/appdata/pihole/etc-dnsmasq.d 0755 root root - -"
     "L+ ${composeFile} - - - - ${composeFileSource}"
-    "L+ ${envFile} - - - - ${envFileSource}"
   ];
 
   networking.firewall = {
@@ -33,15 +54,24 @@ in
     allowedUDPPorts = lib.mkAfter [ 53 ];
   };
 
+  systemd.services.pihole-env = {
+    description = "Render Pi-hole environment file";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = toString renderEnvScript;
+    };
+  };
+
   systemd.services.pihole-compose = {
     description = "Pi-hole via Docker Compose";
-    after = [ "docker.service" "network-online.target" ];
+    after = [ "docker.service" "network-online.target" "pihole-env.service" ];
     wants = [ "network-online.target" ];
-    requires = [ "docker.service" ];
+    requires = [ "docker.service" "pihole-env.service" ];
     wantedBy = [ "multi-user.target" ];
     restartTriggers = [
       composeFileSource
-      envFileSource
     ];
     serviceConfig = {
       Type = "oneshot";

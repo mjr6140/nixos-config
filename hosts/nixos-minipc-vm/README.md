@@ -6,8 +6,13 @@ configuration before applying it to the real N100 hardware.
 It intentionally tracks the server-side mini PC role closely:
 
 - Docker host defaults
+- generic Compose stack management
 - observability stack
 - shared server package set
+
+Current Compose-managed services are defined under `modules/server/stacks/`.
+The VM is the place to validate that stack wiring before applying it to the
+real mini PC host.
 
 It intentionally does not model N100-specific hardware features like Intel GPU
 acceleration. Those stay in the real host config.

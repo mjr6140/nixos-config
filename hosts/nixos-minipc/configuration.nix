@@ -5,8 +5,9 @@
     ./hardware-configuration.nix
     ../../modules/common.nix
     ../../modules/server/docker-host.nix
+    ../../modules/server/docker-compose-app.nix
     ../../modules/server/observability-host.nix
-    ../../modules/server/pihole.nix
+    ../../modules/server/stacks/pihole
     ../../modules/server/default.nix
     ../../modules/server/packages.nix
   ];

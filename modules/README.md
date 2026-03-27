@@ -61,6 +61,19 @@ Docker-host defaults:
 - Compose/NAS mount tooling
 - Shared `/srv/...` directory scaffold
 
+### `server/docker-compose-app.nix`
+Generic Docker Compose app wiring:
+- Per-stack systemd env renderer and compose lifecycle units
+- Plain `compose.yaml` or Nix-generated Compose support
+- Generated `.env` files with optional agenix-backed secret injection
+- Optional host directory scaffolding and per-stack firewall openings
+
+### `server/stacks/<name>/`
+Per-stack bundles for Compose-managed services:
+- `default.nix` for stack-specific Nix wiring
+- `compose.yaml` for the plain Docker Compose definition
+- Additional stack-local files can live alongside them as needed
+
 ### `server/observability-host.nix`
 Observability-host defaults:
 - Prometheus

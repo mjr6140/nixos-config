@@ -124,6 +124,11 @@ Current host roles:
 - `nixos-minipc`: stable mini PC app host
 - `nixos-minipc-vm`: stable mini PC test VM
 
+Server-side Compose stacks live under `modules/server/stacks/<name>/`:
+- `default.nix` contains the stack-specific Nix wiring
+- `compose.yaml` contains the plain Docker Compose definition
+- the generic Compose lifecycle/secret plumbing lives in `modules/server/docker-compose-app.nix`
+
 ## Documentation
 
 - **[Installation Guide](docs/install-plan.md)**: Disk setup and first boot

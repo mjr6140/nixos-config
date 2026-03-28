@@ -44,6 +44,10 @@ it into libvirt without an installer ISO:
 scripts/create-minipc-vm.sh --recreate
 ```
 
+The mini PC VM defaults to a `40 GiB` system disk and grows the root ext4
+filesystem to fill the disk on first boot. Override the disk size at creation
+time with `--system-size GB` if you want a different size.
+
 Useful options:
 
 ```sh

@@ -7,4 +7,5 @@ in
   "snapraid-healthchecks.env.age".publicKeys = [ matt nixosFileserverVm ];
   "pihole.env.age".publicKeys = [ matt nixosMinipcVm ];
   "caddy.env.age".publicKeys = [ matt nixosMinipcVm ];
+  "karakeep.env.age".publicKeys = [ matt nixosMinipcVm ];
 }

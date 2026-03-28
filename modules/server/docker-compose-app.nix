@@ -19,6 +19,7 @@ let
           throw "dockerComposeApps.${name}: set one of composeFileSource or composeSpec.";
       envDefaultsText = lib.generators.toKeyValue { } instance.envDefaults;
       envDefaultsFile = pkgs.writeText "${name}.env.defaults" envDefaultsText;
+      extraFileSources = builtins.attrValues instance.extraFiles;
       dockerCmd = lib.getExe config.virtualisation.docker.package;
       composeCmd = "${dockerCmd} compose --project-name ${instance.projectName} --file ${composeFile}";
       presentSecretEnvFiles =
@@ -64,7 +65,7 @@ let
           wants = [ "network-online.target" ];
           requires = [ "docker.service" "${envServiceName}.service" ];
           wantedBy = instance.wantedBy;
-          restartTriggers = [ composeFileSource ];
+          restartTriggers = [ composeFileSource envDefaultsFile ] ++ extraFileSources;
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;

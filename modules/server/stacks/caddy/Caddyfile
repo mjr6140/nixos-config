@@ -20,4 +20,9 @@
 	handle @pihole {
 		reverse_proxy http://host.docker.internal:8081
 	}
+
+	@karakeep host karakeep.undead.one
+	handle @karakeep {
+		reverse_proxy http://host.docker.internal:3001
+	}
 }

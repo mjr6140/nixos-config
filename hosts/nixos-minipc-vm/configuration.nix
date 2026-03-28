@@ -8,6 +8,7 @@
     ../../modules/server/docker-compose-app.nix
     ../../modules/server/observability-host.nix
     ../../modules/server/stacks/caddy
+    ../../modules/server/stacks/karakeep
     ../../modules/server/stacks/pihole
     ../../modules/server/default.nix
     ../../modules/server/packages.nix
@@ -38,11 +39,55 @@
     group = "root";
     mode = "0400";
   };
+  age.secrets."karakeep.env" = {
+    file = ../../secrets/karakeep.env.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
+
+  systemd.services.grow-rootfs = {
+    description = "Grow root partition and filesystem to fill the VM disk";
+    wantedBy = [ "multi-user.target" ];
+    after = [ "local-fs.target" ];
+    wants = [ "local-fs.target" ];
+    unitConfig.ConditionPathExists = "!/var/lib/grow-rootfs.done";
+    path = with pkgs; [
+      cloud-utils
+      coreutils
+      e2fsprogs
+      gawk
+      gnugrep
+      util-linux
+    ];
+    script = ''
+      set -euo pipefail
+
+      root_source="$(findmnt -n -o SOURCE /)"
+      root_kname="$(basename "$(readlink -f "$root_source")")"
+      disk_name="$(lsblk -no PKNAME "$root_source")"
+      part_num="$(cat "/sys/class/block/$root_kname/partition")"
+
+      if [[ -z "$disk_name" || -z "$part_num" ]]; then
+        echo "Could not determine disk/partition for root filesystem: $root_source" >&2
+        exit 1
+      fi
+
+      growpart "/dev/$disk_name" "$part_num"
+      resize2fs "$root_source"
+
+      install -D -m 0644 /dev/null /var/lib/grow-rootfs.done
+    '';
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+    };
+  };
 
   virtualisation.vmVariantWithBootLoader = {
     services.btrfs.autoScrub = {

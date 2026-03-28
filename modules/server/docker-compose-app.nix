@@ -21,15 +21,14 @@ let
       envDefaultsFile = pkgs.writeText "${name}.env.defaults" envDefaultsText;
       dockerCmd = lib.getExe config.virtualisation.docker.package;
       composeCmd = "${dockerCmd} compose --project-name ${instance.projectName} --file ${composeFile}";
-      presentSecretEnv =
-        lib.filterAttrs (_envVar: secretName: builtins.hasAttr secretName config.age.secrets) instance.secretEnv;
+      presentSecretEnvFiles =
+        builtins.filter (secretName: builtins.hasAttr secretName config.age.secrets) instance.secretEnvFiles;
       renderEnvScript = pkgs.writeShellScript "render-${name}-env" ''
         install -d -m 0755 ${composeDir}
         cp ${envDefaultsFile} ${envFile}
-        ${lib.concatMapStringsSep "\n" (envVar:
-          let secret = presentSecretEnv.${envVar}; in
-          "printf '%s\\n' \"${envVar}=$(cat ${config.age.secrets.${secret}.path})\" >> ${envFile}"
-        ) (builtins.attrNames presentSecretEnv)}
+        ${lib.concatMapStringsSep "\n" (secretName:
+          "cat ${config.age.secrets.${secretName}.path} >> ${envFile}"
+        ) presentSecretEnvFiles}
         chmod 0600 ${envFile}
       '';
       envServiceName = "${name}-env";
@@ -40,6 +39,11 @@ let
         "d ${composeDir} 0755 root root - -"
         "L+ ${composeFile} - - - - ${composeFileSource}"
       ]
+      ++ map (file: "L+ ${composeDir}/${file.name} - - - - ${file.source}") (
+        lib.mapAttrsToList (name: source: {
+          inherit name source;
+        }) instance.extraFiles
+      )
       ++ map (dir: "d ${dir} 0755 root root - -") instance.appdataDirs
       ++ instance.extraTmpfiles;
 
@@ -111,10 +115,10 @@ in
             default = { };
           };
 
-          secretEnv = lib.mkOption {
-            type = lib.types.attrsOf lib.types.str;
-            default = { };
-            description = "Map env var names to config.age.secrets names.";
+          secretEnvFiles = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+            description = "List of config.age.secrets names whose decrypted contents are appended to the final .env file.";
           };
 
           appdataDirs = lib.mkOption {
@@ -125,6 +129,12 @@ in
           extraTmpfiles = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = [ ];
+          };
+
+          extraFiles = lib.mkOption {
+            type = lib.types.attrsOf lib.types.path;
+            default = { };
+            description = "Additional files to place in composeDir, keyed by filename.";
           };
 
           wantedBy = lib.mkOption {

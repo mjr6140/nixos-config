@@ -7,6 +7,7 @@
     ../../modules/server/docker-host.nix
     ../../modules/server/docker-compose-app.nix
     ../../modules/server/observability-host.nix
+    ../../modules/server/stacks/caddy
     ../../modules/server/stacks/pihole
     ../../modules/server/default.nix
     ../../modules/server/packages.nix
@@ -25,8 +26,14 @@
   };
 
   age.identityPaths = [ "/var/lib/agenix/identity" ];
-  age.secrets.pihole-web-password = {
-    file = ../../secrets/pihole-web-password.age;
+  age.secrets."pihole.env" = {
+    file = ../../secrets/pihole.env.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+  age.secrets."caddy.env" = {
+    file = ../../secrets/caddy.env.age;
     owner = "root";
     group = "root";
     mode = "0400";

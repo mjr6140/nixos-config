@@ -1,0 +1,20 @@
+services:
+  caddy:
+    container_name: caddy
+    image: beanpuppy/caddy-porkbun:2
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    env_file:
+      - /srv/compose/caddy/.env
+    volumes:
+      - /srv/compose/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /srv/appdata/caddy/data:/data
+      - /srv/appdata/caddy/config:/config
+      - /var/run/docker.sock:/var/run/docker.sock

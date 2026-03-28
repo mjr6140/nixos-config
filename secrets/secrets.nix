@@ -5,5 +5,6 @@ let
 in
 {
   "snapraid-healthchecks.env.age".publicKeys = [ matt nixosFileserverVm ];
-  "pihole-web-password.age".publicKeys = [ matt nixosMinipcVm ];
+  "pihole.env.age".publicKeys = [ matt nixosMinipcVm ];
+  "caddy.env.age".publicKeys = [ matt nixosMinipcVm ];
 }

@@ -1,0 +1,23 @@
+{
+	email mjr@undead.one
+
+	acme_dns porkbun {
+		api_key {$PORKBUN_API_KEY}
+		api_secret_key {$PORKBUN_API_SECRET_KEY}
+	}
+}
+
+*.undead.one {
+	tls {
+		dns porkbun {
+			api_key {$PORKBUN_API_KEY}
+			api_secret_key {$PORKBUN_API_SECRET_KEY}
+		}
+		resolvers 1.1.1.1
+	}
+
+	@pihole host pihole.undead.one
+	handle @pihole {
+		reverse_proxy http://host.docker.internal:8081
+	}
+}

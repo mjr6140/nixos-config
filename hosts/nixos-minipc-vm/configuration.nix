@@ -8,6 +8,7 @@
     ../../modules/server/docker-compose-app.nix
     ../../modules/server/observability-host.nix
     ../../modules/server/stacks/caddy
+    ../../modules/server/stacks/jellyfin
     ../../modules/server/stacks/karakeep
     ../../modules/server/stacks/pihole
     ../../modules/server/default.nix
@@ -87,6 +88,30 @@
       Type = "oneshot";
       RemainAfterExit = true;
     };
+  };
+
+  fileSystems."/srv/content/data" = {
+    device = "10.12.1.99:/mnt/tank/data";
+    fsType = "nfs";
+    options = [
+      "nfsvers=4.2"
+      "noauto"
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=5min"
+    ];
+  };
+
+  fileSystems."/srv/content/media" = {
+    device = "10.12.1.99:/mnt/tank/data/media";
+    fsType = "nfs";
+    options = [
+      "nfsvers=4.2"
+      "noauto"
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=5min"
+    ];
   };
 
   virtualisation.vmVariantWithBootLoader = {

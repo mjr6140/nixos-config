@@ -1,0 +1,17 @@
+services:
+  jellyfin:
+    image: jellyfin/jellyfin
+    container_name: jellyfin
+    restart: unless-stopped
+    ports:
+      - "8096:8096"
+      - "1900:1900/udp"
+      - "7359:7359/udp"
+    env_file:
+      - /srv/compose/jellyfin/.env
+    volumes:
+      - /srv/appdata/jellyfin/config:/config
+      - /srv/content/media/tv:/data/tvshows
+      - /srv/content/media/movies:/data/movies
+      - /srv/content/media/audio:/data/music
+      - /srv/content/media/stuff:/data/stuff

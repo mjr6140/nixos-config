@@ -25,4 +25,9 @@
 	handle @karakeep {
 		reverse_proxy http://host.docker.internal:3001
 	}
+
+	@jellyfin host jellyfin.undead.one
+	handle @jellyfin {
+		reverse_proxy http://host.docker.internal:8096
+	}
 }

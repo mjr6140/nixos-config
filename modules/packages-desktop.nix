@@ -42,6 +42,7 @@
     # Virtualization and Containerization
     distrobox
     distroshelf
+    nfs-utils
 
     # Media
     vlc

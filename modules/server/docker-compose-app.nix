@@ -24,6 +24,7 @@ let
       composeCmd = "${dockerCmd} compose --project-name ${instance.projectName} --file ${composeFile}";
       presentSecretEnvFiles =
         builtins.filter (secretName: builtins.hasAttr secretName config.age.secrets) instance.secretEnvFiles;
+      secretEnvPaths = map (secretName: config.age.secrets.${secretName}.path) presentSecretEnvFiles;
       renderEnvScript = pkgs.writeShellScript "render-${name}-env" ''
         install -d -m 0755 ${composeDir}
         cp ${envDefaultsFile} ${envFile}
@@ -34,6 +35,8 @@ let
       '';
       envServiceName = "${name}-env";
       composeServiceName = "${name}-compose";
+      refreshServiceName = "${name}-refresh";
+      refreshPathName = "${name}-refresh";
     in
     {
       tmpfiles = [
@@ -59,6 +62,19 @@ let
           };
         };
 
+        ${refreshServiceName} = lib.mkIf (presentSecretEnvFiles != [ ]) {
+          description = "Refresh ${instance.description} after secret env changes";
+          after = [ "docker.service" "${envServiceName}.service" ];
+          requires = [ "docker.service" "${envServiceName}.service" ];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = false;
+            WorkingDirectory = composeDir;
+            ExecStart = "${composeCmd} up -d --remove-orphans";
+            TimeoutStartSec = 0;
+          };
+        };
+
         ${composeServiceName} = {
           description = "${instance.description} via Docker Compose";
           after = [ "docker.service" "network-online.target" "${envServiceName}.service" ];
@@ -73,6 +89,17 @@ let
             ExecStart = "${composeCmd} up -d --remove-orphans";
             ExecStop = "${composeCmd} down";
             TimeoutStartSec = 0;
+          };
+        };
+      };
+
+      systemdPaths = lib.optionalAttrs (presentSecretEnvFiles != [ ]) {
+        ${refreshPathName} = {
+          description = "Watch ${instance.description} secret env files";
+          wantedBy = instance.wantedBy;
+          pathConfig = {
+            PathChanged = secretEnvPaths;
+            Unit = "${refreshServiceName}.service";
           };
         };
       };
@@ -164,6 +191,8 @@ in
       lib.concatMap (instance: instance.tmpfiles) (builtins.attrValues rendered);
 
     systemd.services = lib.mkMerge (map (instance: instance.systemdServices) (builtins.attrValues rendered));
+
+    systemd.paths = lib.mkMerge (map (instance: instance.systemdPaths or { }) (builtins.attrValues rendered));
 
     networking.firewall.allowedTCPPorts =
       lib.mkAfter (lib.concatMap (instance: instance.firewall.allowedTCPPorts) (builtins.attrValues cfg.instances));

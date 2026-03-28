@@ -13,6 +13,10 @@
 
   networking.hostName = "nixos-fileserver-vm";
 
+  users.users.matt.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBlo4CgrsAdGMbal1HgyaUF8lFYol6DmXZgskdxFt776 mjr6140@gmail.com"
+  ];
+
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.qemuGuest.enable = true;

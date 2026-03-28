@@ -14,33 +14,13 @@
   boot.extraModulePackages = [ ];
 
   fileSystems."/" = {
-    device = "/dev/vda2";
-    fsType = "btrfs";
-    options = [ "subvol=@" "compress=zstd" "noatime" "discard=async" ];
-  };
-
-  fileSystems."/home" = {
-    device = "/dev/vda2";
-    fsType = "btrfs";
-    options = [ "subvol=@home" "compress=zstd" "noatime" "discard=async" ];
-  };
-
-  fileSystems."/nix" = {
-    device = "/dev/vda2";
-    fsType = "btrfs";
-    options = [ "subvol=@nix" "compress=zstd" "noatime" "discard=async" ];
-  };
-
-  fileSystems."/var/log" = {
-    device = "/dev/vda2";
-    fsType = "btrfs";
-    options = [ "subvol=@log" "compress=zstd" "noatime" "discard=async" ];
+    device = "/dev/disk/by-label/nixos";
+    fsType = "ext4";
   };
 
   fileSystems."/boot" = {
-    device = "/dev/vda1";
+    device = "/dev/disk/by-label/ESP";
     fsType = "vfat";
-    options = [ "fmask=0022" "dmask=0022" ];
   };
 
   swapDevices = [ ];

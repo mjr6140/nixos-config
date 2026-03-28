@@ -14,6 +14,16 @@
 
   networking.hostName = "nixos-minipc-vm";
 
+  users.users.matt.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBlo4CgrsAdGMbal1HgyaUF8lFYol6DmXZgskdxFt776 mjr6140@gmail.com"
+  ];
+
+  security.sudo.wheelNeedsPassword = lib.mkForce false;
+  services.btrfs.autoScrub = {
+    enable = lib.mkForce false;
+    fileSystems = lib.mkForce [ ];
+  };
+
   age.identityPaths = [ "/var/lib/agenix/identity" ];
   age.secrets.pihole-web-password = {
     file = ../../secrets/pihole-web-password.age;

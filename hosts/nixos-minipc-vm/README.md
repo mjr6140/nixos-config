@@ -25,6 +25,16 @@ Apply this host config with:
 sudo nixos-rebuild switch --flake .#nixos-minipc-vm
 ```
 
+For remote rebuilds from another machine, use:
+
+```sh
+sudo NIX_SSHOPTS="-i /home/matt/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" \
+  nixos-rebuild switch \
+  --flake .#nixos-minipc-vm \
+  --target-host matt@192.168.122.7 \
+  --sudo
+```
+
 ## VM Creation
 
 Use the provisioning script to build a bootable QCOW2 from the flake and import

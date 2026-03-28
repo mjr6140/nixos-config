@@ -30,4 +30,24 @@
 	handle @jellyfin {
 		reverse_proxy http://host.docker.internal:8096
 	}
+
+	@sabnzbd host sabnzbd.undead.one
+	handle @sabnzbd {
+		reverse_proxy http://host.docker.internal:8083
+	}
+
+	@prowlarr host prowlarr.undead.one
+	handle @prowlarr {
+		reverse_proxy http://host.docker.internal:9696
+	}
+
+	@radarr host radarr.undead.one
+	handle @radarr {
+		reverse_proxy http://host.docker.internal:7878
+	}
+
+	@sonarr host sonarr.undead.one
+	handle @sonarr {
+		reverse_proxy http://host.docker.internal:8989
+	}
 }

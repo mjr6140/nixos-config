@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 {
   imports = [
@@ -7,15 +7,28 @@
     ../../modules/server/docker-host.nix
     ../../modules/server/docker-compose-app.nix
     ../../modules/server/observability-host.nix
+    ../../modules/server/stacks/arr
     ../../modules/server/stacks/caddy
     ../../modules/server/stacks/jellyfin
     ../../modules/server/stacks/karakeep
     ../../modules/server/stacks/pihole
+    ../../modules/server/stacks/sabnzbd
     ../../modules/server/default.nix
     ../../modules/server/packages.nix
   ];
 
   networking.hostName = "nixos-minipc";
+
+  services.btrfs.autoScrub = {
+    enable = lib.mkForce false;
+    fileSystems = lib.mkForce [ ];
+  };
+
+  users.users.matt.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBlo4CgrsAdGMbal1HgyaUF8lFYol6DmXZgskdxFt776 mjr6140@gmail.com"
+  ];
+
+  security.sudo.wheelNeedsPassword = lib.mkForce false;
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 

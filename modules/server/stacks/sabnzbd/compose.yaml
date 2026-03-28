@@ -1,0 +1,12 @@
+services:
+  sabnzbd:
+    image: lscr.io/linuxserver/sabnzbd:latest
+    container_name: sabnzbd
+    restart: unless-stopped
+    env_file:
+      - /srv/compose/sabnzbd/.env
+    volumes:
+      - /srv/appdata/sabnzbd/config:/config
+      - /srv/content/data:/data
+    ports:
+      - "8083:8080"

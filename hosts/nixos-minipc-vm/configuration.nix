@@ -7,10 +7,12 @@
     ../../modules/server/docker-host.nix
     ../../modules/server/docker-compose-app.nix
     ../../modules/server/observability-host.nix
+    ../../modules/server/stacks/arr
     ../../modules/server/stacks/caddy
     ../../modules/server/stacks/jellyfin
     ../../modules/server/stacks/karakeep
     ../../modules/server/stacks/pihole
+    ../../modules/server/stacks/sabnzbd
     ../../modules/server/default.nix
     ../../modules/server/packages.nix
   ];

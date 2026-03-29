@@ -21,6 +21,16 @@
 		reverse_proxy http://host.docker.internal:8081
 	}
 
+	@truenas host truenas.undead.one
+	handle @truenas {
+		reverse_proxy http://10.12.1.99:8080 {
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
 	@karakeep host karakeep.undead.one
 	handle @karakeep {
 		reverse_proxy http://host.docker.internal:3001
@@ -49,6 +59,41 @@
 	@sonarr host sonarr.undead.one
 	handle @sonarr {
 		reverse_proxy http://host.docker.internal:8989
+	}
+
+	@bookstack host bookstack.undead.one
+	handle @bookstack {
+		reverse_proxy http://10.12.1.99:6875
+	}
+
+	@paperless host paperless.undead.one
+	handle @paperless {
+		reverse_proxy http://10.12.1.99:8001
+	}
+
+	@qb host qb.undead.one
+	handle @qb {
+		reverse_proxy http://10.12.1.99:8082
+	}
+
+	@backrest host backrest.undead.one
+	handle @backrest {
+		reverse_proxy http://10.12.1.99:9898
+	}
+
+	@speedtest host speedtest.undead.one
+	handle @speedtest {
+		reverse_proxy http://10.12.1.99:6580
+	}
+
+	@docmost host docmost.undead.one
+	handle @docmost {
+		reverse_proxy http://10.12.1.99:3000
+	}
+
+	@mealie host mealie.undead.one
+	handle @mealie {
+		reverse_proxy http://10.12.1.99:9925
 	}
 
 	@cadvisor host cadvisor.undead.one

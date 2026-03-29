@@ -23,6 +23,7 @@ in
   ];
 
   networking.hostName = "nixos-minipc";
+  networking.firewall.allowPing = true;
 
   services.btrfs.autoScrub = {
     enable = lib.mkForce false;

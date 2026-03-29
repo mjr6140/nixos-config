@@ -33,6 +33,11 @@
 		}
 	}
 
+	@dockge host dockge.undead.one
+	handle @dockge {
+		reverse_proxy http://10.12.1.99:5001
+	}
+
 	@karakeep host karakeep.undead.one
 	handle @karakeep {
 		reverse_proxy http://host.docker.internal:3001

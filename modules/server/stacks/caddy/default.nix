@@ -7,6 +7,7 @@
     };
     envDefaults = { };
     secretEnvFiles = [ "caddy.env" ];
+    backup.stopForBackup = false;
     appdataDirs = [
       "/srv/appdata/caddy"
       "/srv/appdata/caddy/data"

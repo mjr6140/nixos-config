@@ -1,7 +1,75 @@
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   gluetunSecretFile = ../../secrets/gluetun.env.age;
+  resticSecretFile = ../../secrets/restic-nixos-minipc.env.age;
+  curl = lib.getExe pkgs.curl;
+  systemctl = lib.getExe' pkgs.systemd "systemctl";
+  backupStoppedComposeUnits =
+    map (name: "${name}-compose") (
+      builtins.attrNames (
+        lib.filterAttrs (_: instance: instance.backup.stopForBackup)
+          config.server.dockerComposeApps.instances
+      )
+    );
+  stopBackupComposeStacks = pkgs.writeShellScript "stop-backup-compose-stacks" ''
+    set -euo pipefail
+    ${lib.optionalString (backupStoppedComposeUnits != [ ]) ''
+      echo "Stopping stacks for backup: ${lib.concatStringsSep " " backupStoppedComposeUnits}"
+      ${systemctl} stop ${lib.concatStringsSep " " backupStoppedComposeUnits}
+    ''}
+    ${lib.optionalString (backupStoppedComposeUnits == [ ]) ''
+      echo "No compose stacks marked to stop for backup"
+    ''}
+  '';
+  startBackupComposeStacks = pkgs.writeShellScript "start-backup-compose-stacks" ''
+    set -euo pipefail
+    ${lib.optionalString (backupStoppedComposeUnits != [ ]) ''
+      echo "Starting stacks after backup: ${lib.concatStringsSep " " backupStoppedComposeUnits}"
+      ${systemctl} start ${lib.concatStringsSep " " backupStoppedComposeUnits}
+    ''}
+    ${lib.optionalString (backupStoppedComposeUnits == [ ]) ''
+      echo "No compose stacks marked to restart after backup"
+    ''}
+  '';
+  pingResticHealthchecksStart = ''
+    set -u
+    ping_url="''${HC_RESTIC_BACKUPS_URL:-}"
+    if [ -z "$ping_url" ]; then
+      echo "Healthchecks ping skipped for restic backup start: HC_RESTIC_BACKUPS_URL is unset"
+      exit 0
+    fi
+    echo "Pinging Healthchecks for restic backup start: $ping_url/start"
+    ${curl} \
+      --fail \
+      --silent \
+      --show-error \
+      --max-time 10 \
+      --retry 2 \
+      "$ping_url/start" \
+      >/dev/null || true
+  '';
+  pingResticHealthchecksResult = ''
+    set -u
+    ping_url="''${HC_RESTIC_BACKUPS_URL:-}"
+    if [ -z "$ping_url" ]; then
+      echo "Healthchecks result ping skipped for restic backup: HC_RESTIC_BACKUPS_URL is unset"
+      exit 0
+    fi
+    status="''${EXIT_STATUS:-1}"
+    if [ "''${SERVICE_RESULT:-}" = "success" ]; then
+      status=0
+    fi
+    echo "Pinging Healthchecks for restic backup result: $ping_url/$status"
+    ${curl} \
+      --fail \
+      --silent \
+      --show-error \
+      --max-time 10 \
+      --retry 2 \
+      "$ping_url/$status" \
+      >/dev/null || true
+  '';
 in
 
 {
@@ -56,9 +124,18 @@ in
       group = "root";
       mode = "0400";
     };
-  } // lib.optionalAttrs (builtins.pathExists gluetunSecretFile) {
+  }
+  // lib.optionalAttrs (builtins.pathExists gluetunSecretFile) {
     "gluetun.env" = {
       file = gluetunSecretFile;
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
+  }
+  // lib.optionalAttrs (builtins.pathExists resticSecretFile) {
+    "restic-nixos-minipc.env" = {
+      file = resticSecretFile;
       owner = "root";
       group = "root";
       mode = "0400";
@@ -104,6 +181,61 @@ in
       "x-systemd.idle-timeout=5min"
     ];
   };
+
+  fileSystems."/mnt/backup-repos" = {
+    device = "10.12.1.99:/mnt/tank/backup-repos";
+    fsType = "nfs";
+    options = [
+      "nfsvers=4.2"
+      "noauto"
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=5min"
+    ];
+  };
+
+  services.restic.backups = lib.optionalAttrs (builtins.pathExists resticSecretFile) {
+    nixos-minipc = {
+      paths = [
+        "/srv/appdata"
+        "/var/lib/agenix/identity"
+        "/etc/ssh"
+      ];
+      exclude = [
+        "/srv/appdata/**/Cache"
+        "/srv/appdata/**/cache"
+      ];
+      repository = "/mnt/backup-repos/restic/nixos-minipc";
+      environmentFile = config.age.secrets."restic-nixos-minipc.env".path;
+      initialize = true;
+      backupPrepareCommand = toString stopBackupComposeStacks;
+      backupCleanupCommand = toString startBackupComposeStacks;
+      pruneOpts = [
+        "--keep-daily 7"
+        "--keep-weekly 5"
+        "--keep-monthly 12"
+      ];
+      timerConfig = {
+        OnCalendar = "03:15";
+        RandomizedDelaySec = "45m";
+        Persistent = true;
+      };
+      createWrapper = true;
+    };
+  };
+
+  systemd.services.restic-backups-nixos-minipc = lib.mkIf
+    (builtins.pathExists resticSecretFile)
+    {
+      serviceConfig.EnvironmentFile = [ "-${config.age.secrets."restic-nixos-minipc.env".path}" ];
+      serviceConfig.RestrictAddressFamilies = lib.mkForce [
+        "AF_UNIX"
+        "AF_INET"
+        "AF_INET6"
+      ];
+      preStart = lib.mkAfter pingResticHealthchecksStart;
+      postStop = lib.mkAfter pingResticHealthchecksResult;
+    };
 
   system.stateVersion = "25.11";
 }

@@ -181,6 +181,14 @@ in
               default = [ ];
             };
           };
+
+          backup = {
+            stopForBackup = lib.mkOption {
+              type = lib.types.bool;
+              default = true;
+              description = "Whether this compose stack should be stopped during host backup jobs.";
+            };
+          };
         };
       }));
     };

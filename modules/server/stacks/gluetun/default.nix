@@ -9,6 +9,7 @@
       FIREWALL_VPN_INPUT_PORTS = "35291";
     };
     secretEnvFiles = [ "gluetun.env" ];
+    backup.stopForBackup = false;
     appdataDirs = [ "/srv/appdata/gluetun" ];
     firewall.allowedTCPPorts = [ 8082 ];
   };

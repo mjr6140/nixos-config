@@ -79,6 +79,9 @@ Observability-host defaults:
 - Prometheus
 - Grafana
 - cAdvisor and node exporter scraping
+- Grafana on `3000/tcp`
+- Prometheus on `9090/tcp`
+- cAdvisor on `8080/tcp`
 
 ## Usage
 

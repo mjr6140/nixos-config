@@ -10,37 +10,75 @@ Files:
 Current secret files:
 
 - `snapraid-healthchecks.env.age`: Healthchecks.io base ping URLs for the fileserver SnapRAID jobs
+- `pihole.env.age`: Pi-hole runtime env fragment
+- `caddy.env.age`: Caddy runtime env fragment
+- `karakeep.env.age`: Karakeep runtime env fragment
+- `gluetun.env.age`: Gluetun runtime env fragment
+
+Pattern:
+
+- use one encrypted env fragment per stack
+- secret file names follow `<stack>.env.age`
+- decrypted files are exposed at `/run/agenix/<stack>.env`
+- the generic Compose module appends those contents into `/srv/compose/<stack>/.env`
 
 Editing:
 
 ```sh
 cd /home/matt/nixos-config/secrets
-RULES=./secrets.nix agenix -i <(ssh-to-age -private-key -i ~/.ssh/id_ed25519) -e snapraid-healthchecks.env.age
+RULES=./secrets.nix agenix -e pihole.env.age
 ```
 
 Expected plaintext format:
 
 ```sh
+KEY=value
+ANOTHER_KEY=value
+```
+
+Examples:
+
+```sh
+# pihole.env.age
+FTLCONF_webserver_api_password=
+
+# caddy.env.age
+PORKBUN_API_KEY=
+PORKBUN_API_SECRET_KEY=
+
+# karakeep.env.age
+NEXTAUTH_SECRET=
+NEXTAUTH_URL=
+MEILI_MASTER_KEY=
+OPENAI_API_KEY=
+
+# gluetun.env.age
+WIREGUARD_PRIVATE_KEY=
+WIREGUARD_PRESHARED_KEY=
+WIREGUARD_ADDRESSES=
+
+# snapraid-healthchecks.env.age
 HC_SNAPRAID_SYNC_URL=
 HC_SNAPRAID_SCRUB_URL=
 ```
 
-The fileserver decrypts this secret at activation/runtime to:
+Example runtime path on a host:
 
 ```sh
-/run/agenix/snapraid-healthchecks-env
+/run/agenix/pihole.env
 ```
 
 The encrypted secret file must be tracked in Git (`git add secrets/snapraid-healthchecks.env.age`) so flake builds include it.
 
-The fileserver VM uses a dedicated age identity at:
+Server hosts use a dedicated age identity at:
 
 ```sh
 /var/lib/agenix/identity
 ```
 
-That key is provisioned by `scripts/create-fileserver-vm.sh` from the host-side file:
+Rekey all secrets after changing recipients in `secrets/secrets.nix`:
 
 ```sh
-/home/matt/.local/share/nixos-fileserver-vm/agenix/identity
+cd /home/matt/nixos-config/secrets
+RULES=./secrets.nix agenix -r
 ```

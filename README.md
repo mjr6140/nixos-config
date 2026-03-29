@@ -129,6 +129,23 @@ Server-side Compose stacks live under `modules/server/stacks/<name>/`:
 - `compose.yaml` contains the plain Docker Compose definition
 - the generic Compose lifecycle/secret plumbing lives in `modules/server/docker-compose-app.nix`
 
+Current mini PC stacks:
+- `arr` (`prowlarr`, `radarr`, `sonarr`)
+- `caddy`
+- `gluetun`
+- `jellyfin`
+- `karakeep`
+- `pihole`
+- `sabnzbd`
+
+Mini PC content mounts:
+- `/srv/content/data` -> `10.12.1.99:/mnt/tank/data`
+- `/srv/content/media` -> `10.12.1.99:/mnt/tank/data/media`
+
+Fresh-host note:
+- the first apply on a newly installed host is easiest when run locally on that host
+- after the first successful `nixos-rebuild switch`, remote rebuilds with `--target-host ... --sudo` work normally
+
 ## Documentation
 
 - **[Installation Guide](docs/install-plan.md)**: Disk setup and first boot
@@ -149,6 +166,9 @@ sudo nixos-rebuild switch --flake .#nixos-fileserver-vm
 
 # Build mini PC VM configuration
 sudo nixos-rebuild switch --flake .#nixos-minipc-vm
+
+# Build real mini PC configuration
+sudo nixos-rebuild switch --flake .#nixos-minipc
 ```
 
 ## Useful Links

@@ -70,3 +70,14 @@ attrs = lib.recursiveUpdate attrs { nested.a = 1; };
 - Do not commit secrets or private keys; use `home/` for user-specific settings.
 - Hardware configs live under `hosts/<name>/hardware-configuration.nix`; keep
   machine-specific paths isolated there.
+
+## Known Gotchas
+- For server Compose stacks, keep plain `compose.yaml` files in `modules/server/stacks/<name>/` and let `modules/server/docker-compose-app.nix` handle lifecycle/env rendering. Do not regress to hand-built YAML string lists when a normal file is enough.
+- For stack secrets, use one encrypted env fragment per stack (`<stack>.env.age`), not one secret file per variable and not plaintext values in tracked Nix files.
+- When a stack needs to decrypt a secret on a new host, update both:
+  - `secrets/secrets.nix` recipient public keys
+  - the host's `age.identityPaths` / `age.secrets` declarations
+  Wiring only the VM host was a recurring mistake.
+- For fresh physical installs, replace placeholder hardware configs with the real generated `hardware-configuration.nix` before relying on remote rebuilds.
+- For VM storage, do not assume the guest filesystem fills the configured virtual disk. The mini PC VM needs its grow service or an equivalent explicit resize step.
+- For the mini PC app host, prefer simple ext4 + swap and handle restore-time ownership fixes with `chown` instead of baking legacy numeric UIDs/GIDs into base stack definitions.

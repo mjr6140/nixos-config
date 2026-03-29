@@ -11,4 +11,6 @@ in
   "karakeep.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
   "gluetun.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
   "restic-nixos-minipc.env.age".publicKeys = [ matt nixosMinipc ];
+  "restic-nixos-minipc-vps.env.age".publicKeys = [ matt nixosMinipc ];
+  "restic-nixos-minipc-vps-ssh.age".publicKeys = [ matt nixosMinipc ];
 }

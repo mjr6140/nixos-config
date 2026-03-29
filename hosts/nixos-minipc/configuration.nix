@@ -3,6 +3,8 @@
 let
   gluetunSecretFile = ../../secrets/gluetun.env.age;
   resticSecretFile = ../../secrets/restic-nixos-minipc.env.age;
+  resticVpsSecretFile = ../../secrets/restic-nixos-minipc-vps.env.age;
+  resticVpsSshKeyFile = ../../secrets/restic-nixos-minipc-vps-ssh.age;
   curl = lib.getExe pkgs.curl;
   systemctl = lib.getExe' pkgs.systemd "systemctl";
   backupStoppedComposeUnits =
@@ -70,6 +72,20 @@ let
       "$ping_url/$status" \
       >/dev/null || true
   '';
+  resticCommonPaths = [
+    "/srv/appdata"
+    "/var/lib/agenix/identity"
+    "/etc/ssh"
+  ];
+  resticCommonExcludes = [
+    "/srv/appdata/**/Cache"
+    "/srv/appdata/**/cache"
+  ];
+  resticCommonPruneOpts = [
+    "--keep-daily 7"
+    "--keep-weekly 5"
+    "--keep-monthly 12"
+  ];
 in
 
 {
@@ -140,6 +156,22 @@ in
       group = "root";
       mode = "0400";
     };
+  }
+  // lib.optionalAttrs (builtins.pathExists resticVpsSecretFile) {
+    "restic-nixos-minipc-vps.env" = {
+      file = resticVpsSecretFile;
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
+  }
+  // lib.optionalAttrs (builtins.pathExists resticVpsSshKeyFile) {
+    "restic-nixos-minipc-vps-ssh" = {
+      file = resticVpsSshKeyFile;
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
   };
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -196,25 +228,14 @@ in
 
   services.restic.backups = lib.optionalAttrs (builtins.pathExists resticSecretFile) {
     nixos-minipc = {
-      paths = [
-        "/srv/appdata"
-        "/var/lib/agenix/identity"
-        "/etc/ssh"
-      ];
-      exclude = [
-        "/srv/appdata/**/Cache"
-        "/srv/appdata/**/cache"
-      ];
+      paths = resticCommonPaths;
+      exclude = resticCommonExcludes;
       repository = "/mnt/backup-repos/restic/nixos-minipc";
       environmentFile = config.age.secrets."restic-nixos-minipc.env".path;
       initialize = true;
       backupPrepareCommand = toString stopBackupComposeStacks;
       backupCleanupCommand = toString startBackupComposeStacks;
-      pruneOpts = [
-        "--keep-daily 7"
-        "--keep-weekly 5"
-        "--keep-monthly 12"
-      ];
+      pruneOpts = resticCommonPruneOpts;
       timerConfig = {
         OnCalendar = "03:15";
         RandomizedDelaySec = "45m";
@@ -222,12 +243,47 @@ in
       };
       createWrapper = true;
     };
-  };
+  } // lib.optionalAttrs
+    (builtins.pathExists resticVpsSecretFile && builtins.pathExists resticVpsSshKeyFile)
+    {
+      nixos-minipc-vps = {
+        paths = resticCommonPaths;
+        exclude = resticCommonExcludes;
+        repository = "sftp:restic@185.45.112.73:/data/backup-repos/restic/nixos-minipc";
+        environmentFile = config.age.secrets."restic-nixos-minipc-vps.env".path;
+        initialize = true;
+        backupPrepareCommand = toString stopBackupComposeStacks;
+        backupCleanupCommand = toString startBackupComposeStacks;
+        pruneOpts = resticCommonPruneOpts;
+        timerConfig = {
+          OnCalendar = "04:30";
+          RandomizedDelaySec = "45m";
+          Persistent = true;
+        };
+        extraOptions = [
+          "sftp.args='-i ${config.age.secrets."restic-nixos-minipc-vps-ssh".path} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/root/.ssh/known_hosts'"
+        ];
+        createWrapper = true;
+      };
+    };
 
   systemd.services.restic-backups-nixos-minipc = lib.mkIf
     (builtins.pathExists resticSecretFile)
     {
       serviceConfig.EnvironmentFile = [ "-${config.age.secrets."restic-nixos-minipc.env".path}" ];
+      serviceConfig.RestrictAddressFamilies = lib.mkForce [
+        "AF_UNIX"
+        "AF_INET"
+        "AF_INET6"
+      ];
+      preStart = lib.mkAfter pingResticHealthchecksStart;
+      postStop = lib.mkAfter pingResticHealthchecksResult;
+    };
+
+  systemd.services.restic-backups-nixos-minipc-vps = lib.mkIf
+    (builtins.pathExists resticVpsSecretFile && builtins.pathExists resticVpsSshKeyFile)
+    {
+      serviceConfig.EnvironmentFile = [ "-${config.age.secrets."restic-nixos-minipc-vps.env".path}" ];
       serviceConfig.RestrictAddressFamilies = lib.mkForce [
         "AF_UNIX"
         "AF_INET"

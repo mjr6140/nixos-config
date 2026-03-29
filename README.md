@@ -150,6 +150,7 @@ Fresh-host note:
 
 - **[Installation Guide](docs/install-plan.md)**: Disk setup and first boot
 - **[Design Decisions](docs/decisions.md)**: Rationale behind configuration choices
+- **[Mini PC Disaster Recovery](docs/minipc-disaster-recovery.md)**: Rebuild and restore runbook for `nixos-minipc`
 - **[Modules README](modules/README.md)**: Module structure and shared options
 
 ## Testing

@@ -18,6 +18,8 @@
 
 	@pihole host pihole.undead.one
 	handle @pihole {
+		@pihole_root path /
+		redir @pihole_root /admin/ 308
 		reverse_proxy http://host.docker.internal:8081
 	}
 

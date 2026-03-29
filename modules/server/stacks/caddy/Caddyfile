@@ -50,4 +50,9 @@
 	handle @sonarr {
 		reverse_proxy http://host.docker.internal:8989
 	}
+
+	@cadvisor host cadvisor.undead.one
+	handle @cadvisor {
+		reverse_proxy http://host.docker.internal:8080
+	}
 }

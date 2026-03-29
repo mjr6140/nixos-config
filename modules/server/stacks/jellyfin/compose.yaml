@@ -9,6 +9,8 @@ services:
       - "7359:7359/udp"
     env_file:
       - /srv/compose/jellyfin/.env
+    devices:
+      - /dev/dri:/dev/dri
     volumes:
       - /srv/appdata/jellyfin/config:/config
       - /srv/content/media/tv:/data/tvshows

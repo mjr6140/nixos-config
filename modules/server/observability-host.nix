@@ -2,10 +2,13 @@
 { config, ... }:
 
 let
+  grafanaPort = 3000;
   prometheusPort = 9090;
   cadvisorPort = 8080;
 in
 {
+  networking.firewall.allowedTCPPorts = [ grafanaPort prometheusPort cadvisorPort ];
+
   services.prometheus = {
     enable = true;
     port = prometheusPort;
@@ -46,12 +49,13 @@ in
     enable = true;
     settings.server = {
       http_addr = "0.0.0.0";
-      http_port = 3000;
+      http_port = grafanaPort;
     };
   };
 
   services.cadvisor = {
     enable = true;
+    listenAddress = "0.0.0.0";
     port = cadvisorPort;
   };
 }

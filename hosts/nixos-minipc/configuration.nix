@@ -30,6 +30,26 @@
 
   security.sudo.wheelNeedsPassword = lib.mkForce false;
 
+  age.identityPaths = [ "/var/lib/agenix/identity" ];
+  age.secrets."pihole.env" = {
+    file = ../../secrets/pihole.env.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+  age.secrets."caddy.env" = {
+    file = ../../secrets/caddy.env.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+  age.secrets."karakeep.env" = {
+    file = ../../secrets/karakeep.env.age;
+    owner = "root";
+    group = "root";
+    mode = "0400";
+  };
+
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   environment.systemPackages = with pkgs; [

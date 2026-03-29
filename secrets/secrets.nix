@@ -9,4 +9,5 @@ in
   "pihole.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
   "caddy.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
   "karakeep.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
+  "gluetun.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
 }

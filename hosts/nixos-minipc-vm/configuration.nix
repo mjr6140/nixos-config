@@ -1,5 +1,9 @@
 { pkgs, lib, ... }:
 
+let
+  gluetunSecretFile = ../../secrets/gluetun.env.age;
+in
+
 {
   imports = [
     ./hardware-configuration.nix
@@ -9,6 +13,7 @@
     ../../modules/server/observability-host.nix
     ../../modules/server/stacks/arr
     ../../modules/server/stacks/caddy
+    ../../modules/server/stacks/gluetun
     ../../modules/server/stacks/jellyfin
     ../../modules/server/stacks/karakeep
     ../../modules/server/stacks/pihole
@@ -30,23 +35,32 @@
   };
 
   age.identityPaths = [ "/var/lib/agenix/identity" ];
-  age.secrets."pihole.env" = {
-    file = ../../secrets/pihole.env.age;
-    owner = "root";
-    group = "root";
-    mode = "0400";
-  };
-  age.secrets."caddy.env" = {
-    file = ../../secrets/caddy.env.age;
-    owner = "root";
-    group = "root";
-    mode = "0400";
-  };
-  age.secrets."karakeep.env" = {
-    file = ../../secrets/karakeep.env.age;
-    owner = "root";
-    group = "root";
-    mode = "0400";
+  age.secrets = {
+    "pihole.env" = {
+      file = ../../secrets/pihole.env.age;
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
+    "caddy.env" = {
+      file = ../../secrets/caddy.env.age;
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
+    "karakeep.env" = {
+      file = ../../secrets/karakeep.env.age;
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
+  } // lib.optionalAttrs (builtins.pathExists gluetunSecretFile) {
+    "gluetun.env" = {
+      file = gluetunSecretFile;
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
   };
 
   boot.kernelPackages = pkgs.linuxPackages_latest;

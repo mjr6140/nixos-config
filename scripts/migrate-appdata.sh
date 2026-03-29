@@ -24,6 +24,7 @@ Required:
   --dest-path PATH       Absolute destination path, e.g. /srv/appdata/karakeep
 
 Optional:
+  --service NAME         Stack/service name; derives destination systemd commands
   --stop-source-cmd CMD  Command to stop the source stack/service
   --stop-dest-cmd CMD    Command to stop the destination stack/service
   --start-dest-cmd CMD   Command to start the destination stack/service
@@ -35,13 +36,12 @@ Optional:
 
 Example:
   scripts/migrate-appdata.sh \
+    --service karakeep \
     --source admin@truenas \
     --source-path /mnt/tank/apps/karakeep \
     --dest matt@nixos-minipc \
     --dest-path /srv/appdata/karakeep \
     --stop-source-cmd 'cd /mnt/tank/apps/karakeep && docker compose down' \
-    --stop-dest-cmd 'sudo systemctl stop karakeep-compose' \
-    --start-dest-cmd 'sudo systemctl start karakeep-compose' \
     --replace
 EOF
 }
@@ -61,6 +61,7 @@ SOURCE_HOST=""
 SOURCE_PATH=""
 DEST_HOST=""
 DEST_PATH=""
+SERVICE_NAME=""
 STOP_SOURCE_CMD=""
 STOP_DEST_CMD=""
 START_DEST_CMD=""
@@ -73,6 +74,10 @@ while (($# > 0)); do
   case "$1" in
     --source)
       SOURCE_HOST="$2"
+      shift 2
+      ;;
+    --service)
+      SERVICE_NAME="$2"
       shift 2
       ;;
     --source-path)
@@ -131,6 +136,15 @@ if [[ -z "$SOURCE_HOST" || -z "$SOURCE_PATH" || -z "$DEST_HOST" || -z "$DEST_PAT
   echo "Missing required arguments." >&2
   usage >&2
   exit 2
+fi
+
+if [[ -n "$SERVICE_NAME" ]]; then
+  if [[ -z "$STOP_DEST_CMD" ]]; then
+    STOP_DEST_CMD="sudo systemctl stop ${SERVICE_NAME}-compose"
+  fi
+  if [[ -z "$START_DEST_CMD" ]]; then
+    START_DEST_CMD="sudo systemctl start ${SERVICE_NAME}-compose"
+  fi
 fi
 
 require_cmd ssh

@@ -58,6 +58,7 @@ locations:
         - .config/Ankama*
         - /home/matt/mnt
         - /home/matt/Faugus
+        - .local/share/nixos-minipc-vm/agenix
       forget:
         keep-hourly: 4
         keep-daily: 14

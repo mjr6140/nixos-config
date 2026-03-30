@@ -34,44 +34,6 @@ let
       echo "No compose stacks marked to restart after backup"
     ''}
   '';
-  pingResticHealthchecksStart = ''
-    set -u
-    ping_url="''${HC_RESTIC_BACKUPS_URL:-}"
-    if [ -z "$ping_url" ]; then
-      echo "Healthchecks ping skipped for restic backup start: HC_RESTIC_BACKUPS_URL is unset"
-      exit 0
-    fi
-    echo "Pinging Healthchecks for restic backup start: $ping_url/start"
-    ${curl} \
-      --fail \
-      --silent \
-      --show-error \
-      --max-time 10 \
-      --retry 2 \
-      "$ping_url/start" \
-      >/dev/null || true
-  '';
-  pingResticHealthchecksResult = ''
-    set -u
-    ping_url="''${HC_RESTIC_BACKUPS_URL:-}"
-    if [ -z "$ping_url" ]; then
-      echo "Healthchecks result ping skipped for restic backup: HC_RESTIC_BACKUPS_URL is unset"
-      exit 0
-    fi
-    status="''${EXIT_STATUS:-1}"
-    if [ "''${SERVICE_RESULT:-}" = "success" ]; then
-      status=0
-    fi
-    echo "Pinging Healthchecks for restic backup result: $ping_url/$status"
-    ${curl} \
-      --fail \
-      --silent \
-      --show-error \
-      --max-time 10 \
-      --retry 2 \
-      "$ping_url/$status" \
-      >/dev/null || true
-  '';
   resticCommonPaths = [
     "/srv/appdata"
     "/var/lib/agenix/identity"
@@ -86,6 +48,76 @@ let
     "--keep-weekly 5"
     "--keep-monthly 12"
   ];
+  combinedBackupWindow = pkgs.writeShellScript "combined-restic-backup-window" ''
+    set -euo pipefail
+
+    local_env=${config.age.secrets."restic-nixos-minipc.env".path}
+    vps_env=${config.age.secrets."restic-nixos-minipc-vps.env".path}
+
+    ping_healthchecks() {
+      local label="$1"
+      local env_file="$2"
+      local suffix="$3"
+      local ping_url
+
+      ping_url="$(
+        set -a
+        source "$env_file"
+        printf '%s' "''${HC_RESTIC_BACKUPS_URL:-}"
+      )"
+
+      if [ -z "$ping_url" ]; then
+        echo "Healthchecks ping skipped for $label: HC_RESTIC_BACKUPS_URL is unset in $env_file"
+        return 0
+      fi
+
+      echo "Pinging Healthchecks for $label: $ping_url/$suffix"
+      ${curl} \
+        --fail \
+        --silent \
+        --show-error \
+        --max-time 10 \
+        --retry 2 \
+        "$ping_url/$suffix" \
+        >/dev/null || true
+    }
+
+    cleanup() {
+      ${startBackupComposeStacks}
+    }
+
+    trap cleanup EXIT
+
+    ${stopBackupComposeStacks}
+
+    local_status=0
+    vps_status=0
+
+    echo "Running local NAS backup job"
+    ping_healthchecks "local restic backup start" "$local_env" start
+    if ${systemctl} start --wait restic-backups-nixos-minipc.service; then
+      ping_healthchecks "local restic backup result" "$local_env" 0
+    else
+      local_status=$?
+      ping_healthchecks "local restic backup result" "$local_env" "$local_status"
+    fi
+
+    echo "Running VPS backup job"
+    ping_healthchecks "VPS restic backup start" "$vps_env" start
+    if ${systemctl} start --wait restic-backups-nixos-minipc-vps.service; then
+      ping_healthchecks "VPS restic backup result" "$vps_env" 0
+    else
+      vps_status=$?
+      ping_healthchecks "VPS restic backup result" "$vps_env" "$vps_status"
+    fi
+
+    if [ "$local_status" -ne 0 ] || [ "$vps_status" -ne 0 ]; then
+      echo "Combined backup window failed: local_status=$local_status vps_status=$vps_status"
+      exit 1
+    fi
+
+    echo "Combined backup window completed successfully"
+  '';
 in
 
 {
@@ -233,14 +265,8 @@ in
       repository = "/mnt/backup-repos/restic/nixos-minipc";
       environmentFile = config.age.secrets."restic-nixos-minipc.env".path;
       initialize = true;
-      backupPrepareCommand = toString stopBackupComposeStacks;
-      backupCleanupCommand = toString startBackupComposeStacks;
       pruneOpts = resticCommonPruneOpts;
-      timerConfig = {
-        OnCalendar = "03:15";
-        RandomizedDelaySec = "45m";
-        Persistent = true;
-      };
+      timerConfig = null;
       createWrapper = true;
     };
   } // lib.optionalAttrs
@@ -252,14 +278,8 @@ in
         repository = "sftp:restic@185.45.112.73:/data/backup-repos/restic/nixos-minipc";
         environmentFile = config.age.secrets."restic-nixos-minipc-vps.env".path;
         initialize = true;
-        backupPrepareCommand = toString stopBackupComposeStacks;
-        backupCleanupCommand = toString startBackupComposeStacks;
         pruneOpts = resticCommonPruneOpts;
-        timerConfig = {
-          OnCalendar = "04:30";
-          RandomizedDelaySec = "45m";
-          Persistent = true;
-        };
+        timerConfig = null;
         extraOptions = [
           "sftp.args='-i ${config.age.secrets."restic-nixos-minipc-vps-ssh".path} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/root/.ssh/known_hosts'"
         ];
@@ -270,27 +290,54 @@ in
   systemd.services.restic-backups-nixos-minipc = lib.mkIf
     (builtins.pathExists resticSecretFile)
     {
-      serviceConfig.EnvironmentFile = [ "-${config.age.secrets."restic-nixos-minipc.env".path}" ];
       serviceConfig.RestrictAddressFamilies = lib.mkForce [
         "AF_UNIX"
         "AF_INET"
         "AF_INET6"
       ];
-      preStart = lib.mkAfter pingResticHealthchecksStart;
-      postStop = lib.mkAfter pingResticHealthchecksResult;
     };
 
   systemd.services.restic-backups-nixos-minipc-vps = lib.mkIf
     (builtins.pathExists resticVpsSecretFile && builtins.pathExists resticVpsSshKeyFile)
     {
-      serviceConfig.EnvironmentFile = [ "-${config.age.secrets."restic-nixos-minipc-vps.env".path}" ];
       serviceConfig.RestrictAddressFamilies = lib.mkForce [
         "AF_UNIX"
         "AF_INET"
         "AF_INET6"
       ];
-      preStart = lib.mkAfter pingResticHealthchecksStart;
-      postStop = lib.mkAfter pingResticHealthchecksResult;
+    };
+
+  systemd.services.restic-backups-window = lib.mkIf
+    (builtins.pathExists resticSecretFile
+      && builtins.pathExists resticVpsSecretFile
+      && builtins.pathExists resticVpsSshKeyFile)
+    {
+      description = "Combined restic backup window for nixos-minipc";
+      after = [
+        "network-online.target"
+        "restic-backups-nixos-minipc.service"
+        "restic-backups-nixos-minipc-vps.service"
+      ];
+      wants = [ "network-online.target" ];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = toString combinedBackupWindow;
+        TimeoutStartSec = 0;
+      };
+    };
+
+  systemd.timers.restic-backups-window = lib.mkIf
+    (builtins.pathExists resticSecretFile
+      && builtins.pathExists resticVpsSecretFile
+      && builtins.pathExists resticVpsSshKeyFile)
+    {
+      description = "Run combined restic backup window";
+      wantedBy = [ "timers.target" ];
+      timerConfig = {
+        OnCalendar = "03:15";
+        RandomizedDelaySec = "45m";
+        Persistent = true;
+      };
     };
 
   system.stateVersion = "25.11";

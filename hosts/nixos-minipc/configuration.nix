@@ -132,6 +132,7 @@ in
     ../../modules/server/stacks/gluetun
     ../../modules/server/stacks/jellyfin
     ../../modules/server/stacks/karakeep
+    ../../modules/server/stacks/omada
     ../../modules/server/stacks/pihole
     ../../modules/server/stacks/sabnzbd
     ../../modules/server/default.nix

@@ -38,6 +38,20 @@
 		reverse_proxy http://10.12.1.99:5001
 	}
 
+	@omada host omada.undead.one
+	handle @omada {
+		reverse_proxy https://host.docker.internal:8043 {
+			transport http {
+				tls_insecure_skip_verify
+			}
+			header_up Host {host}:8043
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+			header_down Location https://omada.undead.one:8043/ https://omada.undead.one/
+		}
+	}
+
 	@karakeep host karakeep.undead.one
 	handle @karakeep {
 		reverse_proxy http://host.docker.internal:3001

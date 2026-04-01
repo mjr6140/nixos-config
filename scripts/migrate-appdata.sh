@@ -155,7 +155,6 @@ require_cmd basename
 SOURCE_PARENT="$(dirname "$SOURCE_PATH")"
 SOURCE_BASENAME="$(basename "$SOURCE_PATH")"
 DEST_PARENT="$(dirname "$DEST_PATH")"
-DEST_BASENAME="$(basename "$DEST_PATH")"
 
 run_remote() {
   local host="$1"
@@ -195,9 +194,9 @@ if ((DRY_RUN)); then
   echo "[dry-run] skipping transfer"
 else
   ssh "${SSH_OPTS[@]}" "$SOURCE_HOST" \
-    "sudo tar --acls --xattrs --numeric-owner -C $(quote_sq "$SOURCE_PARENT") -cpf - $(quote_sq "$SOURCE_BASENAME")" \
+    "sudo tar --acls --xattrs --numeric-owner -C $(quote_sq "$SOURCE_PATH") -cpf - ." \
     | ssh "${SSH_OPTS[@]}" "$DEST_HOST" \
-      "sudo tar --acls --xattrs --numeric-owner -C $(quote_sq "$DEST_PARENT") -xpf -"
+      "sudo mkdir -p $(quote_sq "$DEST_PATH") && sudo tar --acls --xattrs --numeric-owner -C $(quote_sq "$DEST_PATH") -xpf -"
 fi
 
 if [[ -n "$CHOWN_TARGET" ]]; then

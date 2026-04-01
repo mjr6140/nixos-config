@@ -1,0 +1,95 @@
+- Infrastructure:
+    - Caddy:
+        icon: caddy.png
+        href: https://10.12.1.10
+        description: Reverse proxy
+    - Homepage:
+        icon: homepage.png
+        href: https://homepage.undead.one
+        description: Service dashboard
+    - Grafana:
+        icon: grafana.png
+        href: https://grafana.undead.one
+        description: Metrics dashboards
+    - Prometheus:
+        icon: prometheus.png
+        href: https://prometheus.undead.one
+        description: Metrics store
+    - cAdvisor:
+        icon: mdi-chart-timeline-variant
+        href: https://cadvisor.undead.one
+        description: Container metrics
+    - TrueNAS:
+        icon: truenas.png
+        href: https://truenas.undead.one
+        description: NAS UI
+    - Dockge:
+        icon: mdi-docker
+        href: https://dockge.undead.one
+        description: Compose UI on TrueNAS
+
+- Media:
+    - Jellyfin:
+        icon: jellyfin.png
+        href: https://jellyfin.undead.one
+        description: Media server
+    - Karakeep:
+        icon: mdi-bookmark-box-multiple
+        href: https://karakeep.undead.one
+        description: Link and content archive
+    - Sabnzbd:
+        icon: sabnzbd.png
+        href: https://sabnzbd.undead.one
+        description: Usenet downloader
+    - Radarr:
+        icon: radarr.png
+        href: https://radarr.undead.one
+        description: Movie manager
+    - Sonarr:
+        icon: sonarr.png
+        href: https://sonarr.undead.one
+        description: TV manager
+    - Prowlarr:
+        icon: prowlarr.png
+        href: https://prowlarr.undead.one
+        description: Indexer manager
+
+- Network:
+    - Pi-hole:
+        icon: pi-hole.png
+        href: https://pihole.undead.one
+        description: DNS and ad blocking
+    - Omada:
+        icon: mdi-access-point-network
+        href: https://omada.undead.one
+        description: Network controller
+
+- Utilities:
+    - BookStack:
+        icon: bookstack.png
+        href: https://bookstack.undead.one
+        description: Wiki on TrueNAS
+    - Paperless:
+        icon: paperless-ngx.png
+        href: https://paperless.undead.one
+        description: Documents on TrueNAS
+    - qBittorrent:
+        icon: qbittorrent.png
+        href: https://qb.undead.one
+        description: Torrent client on TrueNAS
+    - Backrest:
+        icon: mdi-backup-restore
+        href: https://backrest.undead.one
+        description: Backup UI on TrueNAS
+    - LibreSpeed:
+        icon: librespeed.png
+        href: https://speedtest.undead.one
+        description: Speed test on TrueNAS
+    - Docmost:
+        icon: mdi-text-box-multiple
+        href: https://docmost.undead.one
+        description: Docs on TrueNAS
+    - Mealie:
+        icon: mealie.png
+        href: https://mealie.undead.one
+        description: Recipes on TrueNAS

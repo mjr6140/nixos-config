@@ -81,3 +81,4 @@ attrs = lib.recursiveUpdate attrs { nested.a = 1; };
 - For fresh physical installs, replace placeholder hardware configs with the real generated `hardware-configuration.nix` before relying on remote rebuilds.
 - For VM storage, do not assume the guest filesystem fills the configured virtual disk. The mini PC VM needs its grow service or an equivalent explicit resize step.
 - For the mini PC app host, prefer simple ext4 + swap and handle restore-time ownership fixes with `chown` instead of baking legacy numeric UIDs/GIDs into base stack definitions.
+- Homepage is currently manual config. When adding a new service or changing a public service URL/Caddy hostname, also update `modules/server/stacks/homepage/config/services.yaml` so the dashboard stays in sync.

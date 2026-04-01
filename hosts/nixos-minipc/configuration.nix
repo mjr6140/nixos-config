@@ -130,6 +130,7 @@ in
     ../../modules/server/stacks/arr
     ../../modules/server/stacks/caddy
     ../../modules/server/stacks/gluetun
+    ../../modules/server/stacks/homepage
     ../../modules/server/stacks/jellyfin
     ../../modules/server/stacks/karakeep
     ../../modules/server/stacks/omada

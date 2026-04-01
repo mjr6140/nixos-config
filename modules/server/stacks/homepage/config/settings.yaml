@@ -1,0 +1,19 @@
+title: Home
+theme: dark
+color: slate
+headerStyle: clean
+statusStyle: dot
+hideVersion: true
+layout:
+  Infrastructure:
+    style: row
+    columns: 4
+  Media:
+    style: row
+    columns: 4
+  Network:
+    style: row
+    columns: 4
+  Utilities:
+    style: row
+    columns: 4

@@ -1,0 +1,9 @@
+- Quick Links:
+    - Router:
+        - href: https://10.12.1.1
+    - Mini PC:
+        - href: https://10.12.1.10
+    - TrueNAS:
+        - href: https://10.12.1.99
+    - Storage VPS:
+        - href: ssh://restic@185.45.112.73

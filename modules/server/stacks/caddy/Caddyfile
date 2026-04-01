@@ -38,6 +38,26 @@
 		reverse_proxy http://10.12.1.99:5001
 	}
 
+	@homepage host homepage.undead.one
+	handle @homepage {
+		reverse_proxy http://host.docker.internal:3002 {
+			header_up Host {host}
+			header_up X-Real-IP {remote_host}
+			header_up X-Forwarded-For {remote_host}
+			header_up X-Forwarded-Proto {scheme}
+		}
+	}
+
+	@grafana host grafana.undead.one
+	handle @grafana {
+		reverse_proxy http://host.docker.internal:3000
+	}
+
+	@prometheus host prometheus.undead.one
+	handle @prometheus {
+		reverse_proxy http://host.docker.internal:9090
+	}
+
 	@omada host omada.undead.one
 	handle @omada {
 		reverse_proxy https://host.docker.internal:8043 {

@@ -2,6 +2,10 @@
 
 let
   homepageConfigDir = "/srv/compose/homepage";
+  # This stack works fine in Docker, but if Homepage becomes an important long-term
+  # surface, consider a more Nix-native refactor: render Homepage config from a
+  # shared service metadata source and inject widget secrets via env instead of
+  # treating service links as another manually synced config file.
   renderHomepageConfig = pkgs.writeShellScript "render-homepage-config" ''
     set -euo pipefail
 

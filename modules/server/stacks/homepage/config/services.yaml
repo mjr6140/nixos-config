@@ -15,6 +15,10 @@
         icon: prometheus.png
         href: https://prometheus.undead.one
         description: Metrics store
+    - Healthchecks:
+        icon: mdi-heart-pulse
+        href: https://healthchecks.io
+        description: Job heartbeat monitoring
     - cAdvisor:
         icon: mdi-chart-timeline-variant
         href: https://cadvisor.undead.one

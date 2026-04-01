@@ -14,6 +14,9 @@ Current secret files:
 - `caddy.env.age`: Caddy runtime env fragment
 - `karakeep.env.age`: Karakeep runtime env fragment
 - `gluetun.env.age`: Gluetun runtime env fragment
+- `restic-nixos-minipc.env.age`: Mini PC local restic repo password and Healthchecks env
+- `restic-nixos-minipc-vps.env.age`: Mini PC VPS restic repo password and Healthchecks env
+- `restic-nixos-minipc-vps-ssh.age`: Mini PC VPS restic SSH private key
 
 Pattern:
 
@@ -21,6 +24,7 @@ Pattern:
 - secret file names follow `<stack>.env.age`
 - decrypted files are exposed at `/run/agenix/<stack>.env`
 - the generic Compose module appends those contents into `/srv/compose/<stack>/.env`
+- exceptions are allowed when the secret is not an env fragment, for example an SSH private key used by a backup job
 
 Editing:
 
@@ -56,6 +60,14 @@ OPENAI_API_KEY=
 WIREGUARD_PRIVATE_KEY=
 WIREGUARD_PRESHARED_KEY=
 WIREGUARD_ADDRESSES=
+
+# restic-nixos-minipc.env.age
+RESTIC_PASSWORD=
+HC_RESTIC_BACKUPS_URL=
+
+# restic-nixos-minipc-vps.env.age
+RESTIC_PASSWORD=
+HC_RESTIC_BACKUPS_URL=
 
 # snapraid-healthchecks.env.age
 HC_SNAPRAID_SYNC_URL=

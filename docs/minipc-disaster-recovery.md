@@ -151,6 +151,7 @@ sudo cat /run/agenix/caddy.env
 sudo cat /run/agenix/karakeep.env
 sudo cat /run/agenix/pihole.env
 sudo cat /run/agenix/restic-nixos-minipc.env
+sudo cat /run/agenix/restic-nixos-minipc-vps.env
 ```
 
 Do not paste secret contents anywhere public. This check is only to confirm decryption works.
@@ -208,8 +209,10 @@ Bring the stacks up or restart them:
 sudo systemctl restart caddy-compose
 sudo systemctl restart pihole-compose
 sudo systemctl restart gluetun-compose
+sudo systemctl restart homepage-compose
 sudo systemctl restart karakeep-compose
 sudo systemctl restart jellyfin-compose
+sudo systemctl restart omada-compose
 sudo systemctl restart sabnzbd-compose
 sudo systemctl restart arr-compose
 ```
@@ -221,8 +224,10 @@ systemctl --no-pager --full status \
   caddy-compose \
   pihole-compose \
   gluetun-compose \
+  homepage-compose \
   karakeep-compose \
   jellyfin-compose \
+  omada-compose \
   sabnzbd-compose \
   arr-compose
 ```
@@ -232,9 +237,11 @@ systemctl --no-pager --full status \
 Validate the important endpoints:
 
 - `https://pihole.undead.one`
+- `https://homepage.undead.one`
 - `https://jellyfin.undead.one`
 - `https://sabnzbd.undead.one`
 - `https://karakeep.undead.one`
+- `https://omada.undead.one`
 - `https://radarr.undead.one`
 - `https://sonarr.undead.one`
 - `https://prowlarr.undead.one`
@@ -286,15 +293,16 @@ After the host is stable again:
 1. Run a fresh restic backup:
 
 ```bash
-sudo systemctl start restic-backups-nixos-minipc
+sudo systemctl start restic-backups-window
 ```
 
-2. Check that Healthchecks received the run.
+2. Check that Healthchecks received both the local and VPS backup runs.
 
 3. Confirm the backup repository is still usable:
 
 ```bash
 sudo restic-nixos-minipc snapshots
+sudo restic-nixos-minipc-vps snapshots
 ```
 
 4. Confirm the host responds to LAN services and DNS as expected.
@@ -311,4 +319,4 @@ If time is short, do this:
 6. Restore restic snapshot into `/srv/appdata`, `/var/lib/agenix/identity`, `/etc/ssh`.
 7. Rebuild once more.
 8. Restart services.
-9. Verify Caddy, Pi-hole, Karakeep, Jellyfin, and the arr stack.
+9. Verify Caddy, Pi-hole, Homepage, Karakeep, Jellyfin, Omada, and the arr stack.

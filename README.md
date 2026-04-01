@@ -133,8 +133,10 @@ Current mini PC stacks:
 - `arr` (`prowlarr`, `radarr`, `sonarr`)
 - `caddy`
 - `gluetun`
+- `homepage`
 - `jellyfin`
 - `karakeep`
+- `omada`
 - `pihole`
 - `sabnzbd`
 
@@ -142,9 +144,24 @@ Mini PC content mounts:
 - `/srv/content/data` -> `10.12.1.99:/mnt/tank/data`
 - `/srv/content/media` -> `10.12.1.99:/mnt/tank/data/media`
 
+Mini PC backups:
+- local restic repo on `/mnt/backup-repos/restic/nixos-minipc`
+- VPS restic repo at `restic@185.45.112.73:/data/backup-repos/restic/nixos-minipc`
+- scheduled through the combined `restic-backups-window` systemd timer/service
+
 Fresh-host note:
 - the first apply on a newly installed host is easiest when run locally on that host
 - after the first successful `nixos-rebuild switch`, remote rebuilds with `--target-host ... --sudo` work normally
+
+Typical remote update command for the real mini PC:
+
+```bash
+sudo NIX_SSHOPTS="-i /home/matt/.ssh/id_ed25519" \
+  nixos-rebuild switch \
+  --flake .#nixos-minipc \
+  --target-host matt@10.12.1.10 \
+  --sudo
+```
 
 ## Documentation
 

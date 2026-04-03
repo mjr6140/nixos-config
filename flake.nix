@@ -62,8 +62,6 @@
           ({ ... }: {
             nixpkgs.overlays = [
               (import ./overlays/faugus-fix.nix)
-              # Temporary: unstable regressions in picosvg tests and khal docs.
-              (import ./overlays/python-pins.nix)
             ];
           })
         ];

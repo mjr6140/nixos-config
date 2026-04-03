@@ -1,11 +1,43 @@
-{ config, pkgs, lib, inputs, isVM, ... }: {
+{ config, pkgs, lib, inputs, isVM, ... }:
+let
+  claudeDesktop =
+    pkgs.callPackage
+      "${inputs.claude-desktop}/pkgs/claude-desktop.nix"
+      {
+        patchy-cnb =
+          inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.patchy-cnb;
+        nodePackages = {
+          inherit (pkgs) asar;
+        };
+      };
+
+  claudeDesktopWithFhs = pkgs.buildFHSEnv {
+    name = "claude-desktop";
+    targetPkgs = pkgs': with pkgs'; [
+      docker
+      glibc
+      openssl
+      nodejs
+      uv
+    ];
+    runScript = "${claudeDesktop}/bin/claude-desktop";
+    extraInstallCommands = ''
+      mkdir -p $out/share/applications
+      cp ${claudeDesktop}/share/applications/claude.desktop $out/share/applications/
+
+      mkdir -p $out/share/icons
+      cp -r ${claudeDesktop}/share/icons/* $out/share/icons/
+    '';
+  };
+in
+{
   home.username = "matt";
   home.homeDirectory = "/home/matt";
   home.stateVersion = "25.11";
 
   home.packages = with pkgs; [
     inputs.antigravity.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity
-    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-with-fhs
+    claudeDesktopWithFhs
     orca-slicer
     (pkgs.callPackage ./qidi-studio.nix { })
     autorestic

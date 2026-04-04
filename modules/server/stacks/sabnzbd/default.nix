@@ -10,7 +10,10 @@
     appdataDirs = [
       "/srv/appdata/sabnzbd"
       "/srv/appdata/sabnzbd/config"
-      "/srv/appdata/sabnzbd/work"
+    ];
+    extraTmpfiles = [
+      # linuxserver/sabnzbd runs as the abc user (uid/gid 911) by default.
+      "d /srv/appdata/sabnzbd/work 0775 911 911 - -"
     ];
     firewall.allowedTCPPorts = [ 8083 ];
   };

@@ -55,6 +55,7 @@ let
         ${envServiceName} = {
           description = "Render ${instance.description} environment file";
           wantedBy = instance.wantedBy;
+          restartTriggers = [ envDefaultsFile ] ++ secretEnvPaths;
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;

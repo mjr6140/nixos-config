@@ -7,6 +7,7 @@ services:
       - /srv/compose/sabnzbd/.env
     volumes:
       - /srv/appdata/sabnzbd/config:/config
+      - /srv/appdata/sabnzbd/work:/work
       - /srv/content/data:/data
     ports:
       - "8083:8080"

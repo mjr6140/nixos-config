@@ -7,6 +7,11 @@
     envDefaults = {
       TZ = config.time.timeZone;
     };
+    appdataDirs = [
+      "/srv/appdata/sabnzbd"
+      "/srv/appdata/sabnzbd/config"
+      "/srv/appdata/sabnzbd/work"
+    ];
     firewall.allowedTCPPorts = [ 8083 ];
   };
 }

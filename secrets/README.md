@@ -14,6 +14,8 @@ Current secret files:
 - `caddy.env.age`: Caddy runtime env fragment
 - `karakeep.env.age`: Karakeep runtime env fragment
 - `gluetun.env.age`: Gluetun runtime env fragment
+- `restic-nixos-desktop.env.age`: Desktop restic repo config and password env
+- `restic-nixos-desktop-ssh.age`: Desktop restic SSH private key
 - `restic-nixos-minipc.env.age`: Mini PC local restic repo password and Healthchecks env
 - `restic-nixos-minipc-vps.env.age`: Mini PC VPS restic repo password and Healthchecks env
 - `restic-nixos-minipc-vps-ssh.age`: Mini PC VPS restic SSH private key
@@ -68,6 +70,14 @@ HC_RESTIC_BACKUPS_URL=
 # restic-nixos-minipc-vps.env.age
 RESTIC_PASSWORD=
 HC_RESTIC_BACKUPS_URL=
+
+# restic-nixos-desktop.env.age
+RESTIC_REPOSITORY=sftp:restic@10.12.1.99:/mnt/tank/backup-repos/restic/nixos-desktop
+RESTIC_PASSWORD=
+HC_RESTIC_BACKUPS_URL=
+
+# restic-nixos-desktop-ssh.age
+# OpenSSH private key contents
 
 # snapraid-healthchecks.env.age
 HC_SNAPRAID_SYNC_URL=

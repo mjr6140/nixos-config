@@ -49,6 +49,7 @@
           nixpkgsInput = inputs.nixpkgs;
         };
         modules = [
+          agenix.nixosModules.default
           ./hosts/nixos-desktop/configuration.nix
           home-manager.nixosModules.home-manager
           {

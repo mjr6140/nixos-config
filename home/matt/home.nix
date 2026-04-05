@@ -40,7 +40,6 @@ in
     claudeDesktopWithFhs
     orca-slicer
     (pkgs.callPackage ./qidi-studio.nix { })
-    autorestic
   ] ++ (pkgs.lib.optionals isVM [ pkgs.spice-vdagent ]);
 
   # GNOME Extensions - installed and configured
@@ -202,11 +201,6 @@ Hidden=true
     ./borgmatic.nix
   ];
 
-  xdg.configFile."autorestic/.autorestic.yml".source = ./autorestic.yml;
-  xdg.configFile."autorestic/.password".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/autorestic/secrets/.password";
-  xdg.configFile."autorestic/healthchecks.env".source =
-    config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/.config/autorestic/secrets/healthchecks.env";
   xdg.configFile."opencode/opencode.json".text = builtins.toJSON {
     "$schema" = "https://opencode.ai/config.json";
     compaction = {
@@ -234,32 +228,5 @@ Hidden=true
     };
     model = "llama.cpp/qwen3-coder";
     small_model = "llama.cpp/qwen3-coder";
-  };
-
-  systemd.user.services.autorestic-backup = {
-    Unit = {
-      Description = "Autorestic backup";
-      After = [ "network-online.target" ];
-      Wants = [ "network-online.target" ];
-    };
-    Service = {
-      Type = "oneshot";
-      EnvironmentFile = "%h/.config/autorestic/healthchecks.env";
-      ExecStartPre = "${lib.getExe pkgs.bash} -lc 'for i in {1..30}; do ${lib.getExe' pkgs.iputils "ping"} -c1 -W1 10.12.1.99 >/dev/null 2>&1 && exit 0; sleep 2; done; echo \"Backup host unreachable\" >&2; exit 1'";
-      ExecStart = "${lib.getExe pkgs.autorestic} backup -a";
-    };
-  };
-
-  systemd.user.timers.autorestic-backup = {
-    Unit = {
-      Description = "Run autorestic backup hourly";
-    };
-    Timer = {
-      OnCalendar = "hourly";
-      Persistent = false;
-    };
-    Install = {
-      WantedBy = [ "timers.target" ];
-    };
   };
 }

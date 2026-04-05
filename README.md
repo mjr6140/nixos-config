@@ -167,7 +167,8 @@ sudo NIX_SSHOPTS="-i /home/matt/.ssh/id_ed25519" \
 
 - **[Installation Guide](docs/install-plan.md)**: Disk setup and first boot
 - **[Design Decisions](docs/decisions.md)**: Rationale behind configuration choices
-- **[Mini PC Disaster Recovery](docs/minipc-disaster-recovery.md)**: Rebuild and restore runbook for `nixos-minipc`
+- **[Mini PC Backup Recovery](docs/backup-recovery/nixos-minipc-backup-recovery.md)**: Backup, restore, and rebuild runbook for `nixos-minipc`
+- **[Desktop Backup Recovery](docs/backup-recovery/nixos-desktop-backup-recovery.md)**: Backup, restore, and rebuild runbook for `nixos-desktop`
 - **[Modules README](modules/README.md)**: Module structure and shared options
 
 ## Testing

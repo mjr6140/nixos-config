@@ -92,7 +92,7 @@ Example runtime path on a host:
 
 The encrypted secret file must be tracked in Git (`git add secrets/snapraid-healthchecks.env.age`) so flake builds include it.
 
-Server hosts use a dedicated age identity at:
+Any host that needs to decrypt agenix-managed runtime secrets should use a dedicated host age identity at:
 
 ```sh
 /var/lib/agenix/identity

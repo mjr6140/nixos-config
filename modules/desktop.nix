@@ -71,10 +71,14 @@
   users.users.matt.extraGroups = [ "libvirtd" "docker" ];
 
   # Hardware and desktop-adjacent services
-  services.printing.enable = true;
+  services.printing = {
+    enable = true;
+    browsed.enable = true;
+  };
   services.avahi = {
     enable = true;
     nssmdns4 = true;
+    openFirewall = true;
   };
   security.polkit.enable = true;
   security.rtkit.enable = true;  # For PipeWire real-time priority

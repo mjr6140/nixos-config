@@ -28,12 +28,16 @@
       url = "github:numtide/llm-agents.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, dms, antigravity, claude-desktop, agenix, llm-agents, vscode-extensions, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, dms, antigravity, claude-desktop, agenix, llm-agents, zen-browser, vscode-extensions, ... }@inputs:
     let
       system = "x86_64-linux";
       # VM-only overlay for Path of Building software rendering

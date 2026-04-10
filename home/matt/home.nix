@@ -31,6 +31,8 @@ let
   };
 in
 {
+  imports = [ inputs.zen-browser.homeModules.twilight ];
+
   home.username = "matt";
   home.homeDirectory = "/home/matt";
   home.stateVersion = "25.11";
@@ -156,6 +158,15 @@ Hidden=true
     settings = {
       user.name = "Matt Rickard";
       user.email = "mjr6140@gmail.com";
+    };
+  };
+
+  programs.zen-browser = {
+    enable = true;
+    setAsDefaultBrowser = false;
+    profiles.default.settings = {
+      "zen.view.hide-window-controls" = false;
+      "zen.folders.owned-tabs-in-folder" = true;
     };
   };
 

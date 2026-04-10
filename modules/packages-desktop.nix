@@ -8,6 +8,7 @@
     thunderbird
     discord-ptb
     firefox
+    floorp-bin
     eddie
 
     # Gaming

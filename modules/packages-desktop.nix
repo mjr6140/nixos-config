@@ -7,7 +7,6 @@
     brave
     thunderbird
     discord-ptb
-    firefox
     floorp-bin
     eddie
 

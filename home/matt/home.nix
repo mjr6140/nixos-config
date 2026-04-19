@@ -161,6 +161,107 @@ Hidden=true
     };
   };
 
+  programs.firefox = {
+    enable = true;
+    policies = {
+      DisableTelemetry = true;
+      DisableFirefoxStudies = true;
+      DisablePocket = true;
+      DisableSetDesktopBackground = true;
+      DontCheckDefaultBrowser = true;
+      OfferToSaveLogins = false;
+      TranslateEnabled = false;
+    };
+    profiles.default = {
+      id = 0;
+      name = "default";
+      isDefault = true;
+
+      search = {
+        force = true;
+        default = "ddg";
+        privateDefault = "ddg";
+        order = [
+          "ddg"
+          "google"
+          "Nix Packages"
+          "NixOS Wiki"
+        ];
+        engines = {
+          "Nix Packages" = {
+            urls = [
+              {
+                template = "https://search.nixos.org/packages";
+                params = [
+                  {
+                    name = "type";
+                    value = "packages";
+                  }
+                  {
+                    name = "query";
+                    value = "{searchTerms}";
+                  }
+                ];
+              }
+            ];
+            definedAliases = [ "@np" ];
+            icon = "/run/current-system/sw/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+          };
+          "NixOS Wiki" = {
+            urls = [
+              {
+                template = "https://wiki.nixos.org/w/index.php?search={searchTerms}";
+              }
+            ];
+            definedAliases = [ "@nw" ];
+            iconMapObj."16" = "https://wiki.nixos.org/favicon.ico";
+          };
+          google.metaData.alias = "@g";
+          bing.metaData.hidden = true;
+        };
+      };
+
+      settings = {
+        "app.shield.optoutstudies.enabled" = false;
+        "browser.aboutConfig.showWarning" = false;
+        "browser.bookmarks.restore_default_bookmarks" = false;
+        "browser.contentblocking.category" = "strict";
+        "browser.ctrlTab.sortByRecentlyUsed" = true;
+        "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+        "browser.newtabpage.activity-stream.feeds.topsites" = true;
+        "browser.newtabpage.activity-stream.showSponsored" = false;
+        "browser.newtabpage.activity-stream.system.showSponsored" = false;
+        "browser.newtabpage.pinned" = [
+          {
+            label = "GitHub";
+            url = "https://github.com/";
+          }
+          {
+            label = "NixOS Search";
+            url = "https://search.nixos.org/packages";
+          }
+          {
+            label = "Home Manager";
+            url = "https://nix-community.github.io/home-manager/";
+          }
+          {
+            label = "Gmail";
+            url = "https://mail.google.com/";
+          }
+        ];
+        "browser.search.suggest.enabled" = true;
+        "browser.startup.homepage" = "https://search.nixos.org/packages";
+        "browser.startup.page" = 3;
+        "browser.tabs.closeWindowWithLastTab" = false;
+        "browser.toolbars.bookmarks.visibility" = "newtab";
+        "extensions.autoDisableScopes" = 0;
+        "media.eme.enabled" = true;
+        "sidebar.revamp" = true;
+        "signon.rememberSignons" = false;
+      };
+    };
+  };
+
   programs.zen-browser = {
     enable = true;
     setAsDefaultBrowser = false;

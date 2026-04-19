@@ -1,35 +1,4 @@
 { config, pkgs, lib, inputs, isVM, ... }:
-let
-  claudeDesktop =
-    pkgs.callPackage
-      "${inputs.claude-desktop}/pkgs/claude-desktop.nix"
-      {
-        patchy-cnb =
-          inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.patchy-cnb;
-        nodePackages = {
-          inherit (pkgs) asar;
-        };
-      };
-
-  claudeDesktopWithFhs = pkgs.buildFHSEnv {
-    name = "claude-desktop";
-    targetPkgs = pkgs': with pkgs'; [
-      docker
-      glibc
-      openssl
-      nodejs
-      uv
-    ];
-    runScript = "${claudeDesktop}/bin/claude-desktop";
-    extraInstallCommands = ''
-      mkdir -p $out/share/applications
-      cp ${claudeDesktop}/share/applications/claude.desktop $out/share/applications/
-
-      mkdir -p $out/share/icons
-      cp -r ${claudeDesktop}/share/icons/* $out/share/icons/
-    '';
-  };
-in
 {
   imports = [ inputs.zen-browser.homeModules.twilight ];
 
@@ -39,7 +8,7 @@ in
 
   home.packages = with pkgs; [
     inputs.antigravity.packages.${pkgs.stdenv.hostPlatform.system}.google-antigravity
-    claudeDesktopWithFhs
+    inputs.claude-desktop.packages.${pkgs.stdenv.hostPlatform.system}.claude-desktop-fhs
     orca-slicer
     (pkgs.callPackage ./qidi-studio.nix { })
   ] ++ (pkgs.lib.optionals isVM [ pkgs.spice-vdagent ]);

@@ -67,7 +67,7 @@ in
       favorite-apps = [
         "org.gnome.Console.desktop"
         "org.gnome.Nautilus.desktop"
-        "brave-browser.desktop"
+        "firefox.desktop"
         "thunderbird.desktop"
         "steam.desktop"
       ];
@@ -78,11 +78,11 @@ in
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
-      "text/html" = "brave-browser.desktop";
-      "x-scheme-handler/http" = "brave-browser.desktop";
-      "x-scheme-handler/https" = "brave-browser.desktop";
-      "x-scheme-handler/about" = "brave-browser.desktop";
-      "x-scheme-handler/unknown" = "brave-browser.desktop";
+      "text/html" = "firefox.desktop";
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
+      "x-scheme-handler/about" = "firefox.desktop";
+      "x-scheme-handler/unknown" = "firefox.desktop";
       "x-scheme-handler/mailto" = "thunderbird.desktop";
     };
   };
@@ -139,7 +139,7 @@ Hidden=true
         Mod+V hotkey-overlay-title="Toggle Clipboard Manager" { spawn "dms" "ipc" "clipboard" "toggle"; }
         XF86MonBrightnessUp allow-when-locked=true { spawn "dms" "ipc" "brightness" "increment" "5" ""; }
         XF86MonBrightnessDown allow-when-locked=true { spawn "dms" "ipc" "brightness" "decrement" "5" ""; }
-        Mod+B hotkey-overlay-title="Open Brave" { spawn "brave"; }
+        Mod+B hotkey-overlay-title="Open Firefox" { spawn "firefox"; }
         Mod+T hotkey-overlay-title="Open Terminal" { spawn "alacritty"; }
     }
   '';

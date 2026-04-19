@@ -47,9 +47,6 @@
     # Media
     vlc
 
-    # LLM Agents
-    llm-agents.codex
-
     # GNOME Tools
     gnome-tweaks
     gnome-extension-manager

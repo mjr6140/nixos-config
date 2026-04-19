@@ -161,6 +161,19 @@ Hidden=true
     };
   };
 
+  programs.mcp = {
+    enable = true;
+    servers.nixos = {
+      command = lib.getExe pkgs.mcp-nixos;
+    };
+  };
+
+  programs.codex = {
+    enable = true;
+    package = pkgs.llm-agents.codex;
+    enableMcpIntegration = true;
+  };
+
   programs.firefox = {
     enable = true;
     policies = {

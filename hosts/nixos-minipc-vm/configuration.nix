@@ -31,10 +31,6 @@ in
   ];
 
   security.sudo.wheelNeedsPassword = lib.mkForce false;
-  services.btrfs.autoScrub = {
-    enable = lib.mkForce false;
-    fileSystems = lib.mkForce [ ];
-  };
 
   age.identityPaths = [ "/var/lib/agenix/identity" ];
   age.secrets = {
@@ -64,8 +60,6 @@ in
       mode = "0400";
     };
   };
-
-  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
@@ -133,10 +127,6 @@ in
   };
 
   virtualisation.vmVariantWithBootLoader = {
-    services.btrfs.autoScrub = {
-      enable = lib.mkForce false;
-      fileSystems = lib.mkForce [ ];
-    };
     virtualisation.diskSize = lib.mkForce (40 * 1024);
     virtualisation.sharedDirectories = lib.mkForce { };
   };

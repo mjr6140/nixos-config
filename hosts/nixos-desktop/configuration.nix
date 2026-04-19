@@ -104,6 +104,8 @@ in
   # Networking (host-specific)
   networking.hostName = "nixos-desktop";
 
+  services.btrfs.autoScrub.enable = true;
+
   age.identityPaths = [ "/var/lib/agenix/identity" ];
   age.secrets =
     lib.optionalAttrs (builtins.pathExists resticSecretFile) {

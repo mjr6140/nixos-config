@@ -17,16 +17,10 @@
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBlo4CgrsAdGMbal1HgyaUF8lFYol6DmXZgskdxFt776 mjr6140@gmail.com"
   ];
 
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
 
   virtualisation.vmVariantWithBootLoader = {
-    services.btrfs.autoScrub = {
-      enable = lib.mkForce false;
-      fileSystems = lib.mkForce [ ];
-    };
     virtualisation.diskSize = lib.mkForce (40 * 1024);
     virtualisation.sharedDirectories = lib.mkForce { };
   };

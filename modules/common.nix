@@ -50,7 +50,6 @@
   };
 
   # Maintenance & Flakes
-  services.btrfs.autoScrub.enable = true;
   services.fstrim = {
     enable = true;
     interval = "weekly";

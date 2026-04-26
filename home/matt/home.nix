@@ -1,4 +1,7 @@
 { config, pkgs, lib, inputs, isVM, ... }:
+let
+  vscodeLldb = pkgs.callPackage "${inputs.nixpkgs.outPath}/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb" { };
+in
 {
   imports = [ inputs.zen-browser.homeModules.twilight ];
 
@@ -145,6 +148,7 @@ Hidden=true
 
   programs.firefox = {
     enable = true;
+    configPath = ".mozilla/firefox";
     policies = {
       DisableTelemetry = true;
       DisableFirefoxStudies = true;
@@ -267,7 +271,7 @@ Hidden=true
       extensions = [
         pkgs.vscode-marketplace.github.copilot
         pkgs.vscode-marketplace."rust-lang"."rust-analyzer"
-        pkgs.vscode-marketplace-universal.vadimcn."vscode-lldb"
+        vscodeLldb
         pkgs.vscode-marketplace.tamasfe."even-better-toml"
         pkgs.vscode-marketplace.github.copilot-chat
         pkgs.vscode-marketplace.donjayamanne.githistory

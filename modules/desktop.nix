@@ -7,6 +7,8 @@
   nixpkgs.overlays = [
     inputs.vscode-extensions.overlays.default
     inputs.llm-agents.overlays.default
+    (import ../overlays/aioboto3-fix.nix)
+    (import ../overlays/openldap-fix.nix)
   ];
 
   # Fonts

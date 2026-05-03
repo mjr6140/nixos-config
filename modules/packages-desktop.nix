@@ -6,7 +6,8 @@
     # Browsers & Communication
     brave
     thunderbird
-    discord-ptb
+    # PTB currently pulls openssl_1_1 through Discord's distro modules.
+    discord
     floorp-bin
     eddie
 

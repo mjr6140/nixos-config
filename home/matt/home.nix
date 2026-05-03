@@ -1,6 +1,13 @@
 { config, pkgs, lib, inputs, isVM, ... }:
 let
   vscodeLldb = pkgs.callPackage "${inputs.nixpkgs.outPath}/pkgs/applications/editors/vscode/extensions/vadimcn.vscode-lldb" { };
+  firefoxWithPortalWakeLock = pkgs.firefox.overrideAttrs (oldAttrs: {
+    makeWrapperArgs = (oldAttrs.makeWrapperArgs or [ ]) ++ [
+      "--set"
+      "MOZ_WAKE_LOCK_TYPE"
+      "FreeDesktopPortal"
+    ];
+  });
 in
 {
   imports = [ inputs.zen-browser.homeModules.twilight ];
@@ -148,6 +155,7 @@ Hidden=true
 
   programs.firefox = {
     enable = true;
+    package = firefoxWithPortalWakeLock;
     configPath = ".mozilla/firefox";
     policies = {
       DisableTelemetry = true;

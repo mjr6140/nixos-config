@@ -1,0 +1,36 @@
+name: validate nixos
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-nixos-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v20
+
+      - name: Check flake
+        run: nix flake check --print-build-logs
+
+      - name: Build mini PC system
+        run: nix build .#nixosConfigurations.nixos-minipc.config.system.build.toplevel --print-build-logs
+
+      - name: Build desktop system
+        run: nix build .#nixosConfigurations.nixos-desktop.config.system.build.toplevel --print-build-logs

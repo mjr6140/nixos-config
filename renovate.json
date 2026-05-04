@@ -1,0 +1,83 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "timezone": "America/New_York",
+  "dependencyDashboard": true,
+  "labels": [
+    "dependencies"
+  ],
+  "nix": {
+    "enabled": true
+  },
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "before 5am on monday"
+    ],
+    "commitMessageAction": "chore(deps)",
+    "commitMessageTopic": "refresh flake.lock"
+  },
+  "packageRules": [
+    {
+      "description": "Group routine server application container updates.",
+      "matchManagers": [
+        "docker-compose"
+      ],
+      "matchFileNames": [
+        "modules/server/stacks/**/compose.yaml"
+      ],
+      "excludePackageNames": [
+        "beanpuppy/caddy-porkbun",
+        "ghcr.io/karakeep-app/karakeep",
+        "getmeili/meilisearch",
+        "mbentley/omada-controller",
+        "pihole/pihole"
+      ],
+      "groupName": "server app containers",
+      "addLabels": [
+        "docker",
+        "server"
+      ],
+      "schedule": [
+        "before 5am on tuesday"
+      ]
+    },
+    {
+      "description": "Keep stateful or infrastructure container updates separate for review.",
+      "matchManagers": [
+        "docker-compose"
+      ],
+      "matchPackageNames": [
+        "beanpuppy/caddy-porkbun",
+        "ghcr.io/karakeep-app/karakeep",
+        "getmeili/meilisearch",
+        "mbentley/omada-controller",
+        "pihole/pihole"
+      ],
+      "separateMajorMinor": true,
+      "separateMinorPatch": true,
+      "addLabels": [
+        "docker",
+        "server",
+        "manual-review"
+      ],
+      "schedule": [
+        "before 5am on wednesday"
+      ]
+    },
+    {
+      "description": "Label flake input and lock maintenance updates.",
+      "matchManagers": [
+        "nix"
+      ],
+      "addLabels": [
+        "nix"
+      ],
+      "schedule": [
+        "before 5am on monday"
+      ]
+    }
+  ]
+}

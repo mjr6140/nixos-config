@@ -2,12 +2,12 @@
 
 let
   pname = "qidi-studio";
-  version = "2.05.01.52";
-  assetVersion = "v02.05.01.52";
+  version = "2.05.02.50";
+  assetVersion = "v02.05.02.50";
 
   src = pkgs.fetchurl {
     url = "https://github.com/QIDITECH/QIDIStudio/releases/download/v${version}/QIDIStudio_${assetVersion}_Ubuntu24.AppImage";
-    sha256 = "18bvm2xyv7yab4cmlyyhghkqli47l2051z05bdmhyw41dcnjqd3f";
+    hash = "sha256-dHefxOelz8B40HFxqDdG0+whPMYLlbLDbx3AM7+R/TA=";
   };
 
   appimageContents = pkgs.appimageTools.extract {

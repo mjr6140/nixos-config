@@ -38,6 +38,3 @@ jobs:
 
       - name: Build mini PC system
         run: nix build .#nixosConfigurations.nixos-minipc.config.system.build.toplevel --print-build-logs
-
-      - name: Build desktop system
-        run: nix build .#nixosConfigurations.nixos-desktop.config.system.build.toplevel --print-build-logs

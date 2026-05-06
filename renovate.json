@@ -29,13 +29,6 @@
       "matchFileNames": [
         "modules/server/stacks/**/compose.yaml"
       ],
-      "excludePackageNames": [
-        "beanpuppy/caddy-porkbun",
-        "ghcr.io/karakeep-app/karakeep",
-        "getmeili/meilisearch",
-        "mbentley/omada-controller",
-        "pihole/pihole"
-      ],
       "groupName": "server app containers",
       "addLabels": [
         "docker",
@@ -43,6 +36,13 @@
       ],
       "schedule": [
         "before 5am on tuesday"
+      ],
+      "matchPackageNames": [
+        "!beanpuppy/caddy-porkbun",
+        "!ghcr.io/karakeep-app/karakeep",
+        "!getmeili/meilisearch",
+        "!mbentley/omada-controller",
+        "!pihole/pihole"
       ]
     },
     {

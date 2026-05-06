@@ -1,7 +1,7 @@
 services:
   omada-controller:
     container_name: omada-controller
-    image: mbentley/omada-controller:5.14
+    image: mbentley/omada-controller:5.15
     restart: unless-stopped
     network_mode: host
     stop_grace_period: 60s

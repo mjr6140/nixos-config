@@ -335,5 +335,20 @@ in
       };
     };
 
+  system.autoUpgrade = {
+    enable = true;
+    flake = "github:mjr6140/nixos-config#nixos-minipc";
+    operation = "switch";
+    upgrade = false;
+    dates = "04:45";
+    randomizedDelaySec = "30m";
+    persistent = true;
+    allowReboot = true;
+    rebootWindow = {
+      lower = "05:30";
+      upper = "06:30";
+    };
+  };
+
   system.stateVersion = "25.11";
 }

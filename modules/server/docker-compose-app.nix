@@ -25,6 +25,11 @@ let
       presentSecretEnvFiles =
         builtins.filter (secretName: builtins.hasAttr secretName config.age.secrets) instance.secretEnvFiles;
       secretEnvPaths = map (secretName: config.age.secrets.${secretName}.path) presentSecretEnvFiles;
+      composeUpScript = pkgs.writeShellScript "compose-up-${name}" ''
+        set -euo pipefail
+        ${composeCmd} pull --ignore-pull-failures
+        ${composeCmd} up -d --remove-orphans
+      '';
       renderEnvScript = pkgs.writeShellScript "render-${name}-env" ''
         install -d -m 0755 ${composeDir}
         cp ${envDefaultsFile} ${envFile}
@@ -71,7 +76,7 @@ let
             Type = "oneshot";
             RemainAfterExit = false;
             WorkingDirectory = composeDir;
-            ExecStart = "${composeCmd} up -d --remove-orphans";
+            ExecStart = toString composeUpScript;
             TimeoutStartSec = 0;
           };
         };
@@ -87,7 +92,7 @@ let
             Type = "oneshot";
             RemainAfterExit = true;
             WorkingDirectory = composeDir;
-            ExecStart = "${composeCmd} up -d --remove-orphans";
+            ExecStart = toString composeUpScript;
             ExecStop = "${composeCmd} down";
             TimeoutStartSec = 0;
           };

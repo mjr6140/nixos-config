@@ -340,8 +340,8 @@ in
     flake = "github:mjr6140/nixos-config#nixos-minipc";
     operation = "switch";
     upgrade = false;
-    dates = "04:45";
-    randomizedDelaySec = "30m";
+    dates = "05:35";
+    randomizedDelaySec = "20m";
     persistent = true;
     allowReboot = true;
     rebootWindow = {

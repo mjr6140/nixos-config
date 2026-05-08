@@ -28,7 +28,7 @@ services:
       - --hide-scrollbars
 
   meilisearch:
-    image: getmeili/meilisearch:v1.43.0
+    image: getmeili/meilisearch:v1.37.0
     restart: unless-stopped
     env_file:
       - /srv/compose/karakeep/.env

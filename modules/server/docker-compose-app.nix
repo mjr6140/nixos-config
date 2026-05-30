@@ -72,6 +72,9 @@ let
           description = "Refresh ${instance.description} after secret env changes";
           after = [ "docker.service" "${envServiceName}.service" ];
           requires = [ "docker.service" "${envServiceName}.service" ];
+          unitConfig = lib.optionalAttrs (instance.requiredMounts != [ ]) {
+            RequiresMountsFor = instance.requiredMounts;
+          };
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = false;
@@ -88,12 +91,17 @@ let
           requires = [ "docker.service" "${envServiceName}.service" ];
           wantedBy = instance.wantedBy;
           restartTriggers = [ composeFileSource envDefaultsFile ] ++ extraFileSources;
+          unitConfig = lib.optionalAttrs (instance.requiredMounts != [ ]) {
+            RequiresMountsFor = instance.requiredMounts;
+          };
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
             WorkingDirectory = composeDir;
             ExecStart = toString composeUpScript;
             ExecStop = "${composeCmd} down";
+            Restart = "on-failure";
+            RestartSec = "30s";
             TimeoutStartSec = 0;
           };
         };
@@ -158,6 +166,12 @@ in
           appdataDirs = lib.mkOption {
             type = lib.types.listOf lib.types.str;
             default = [ ];
+          };
+
+          requiredMounts = lib.mkOption {
+            type = lib.types.listOf lib.types.str;
+            default = [ ];
+            description = "Host paths that must be mounted before Docker Compose creates container bind mounts.";
           };
 
           extraTmpfiles = lib.mkOption {

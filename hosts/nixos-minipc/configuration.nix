@@ -226,6 +226,7 @@ in
       "nofail"
       "x-systemd.automount"
       "x-systemd.idle-timeout=5min"
+      "x-systemd.mount-timeout=30s"
     ];
   };
 
@@ -238,6 +239,7 @@ in
       "nofail"
       "x-systemd.automount"
       "x-systemd.idle-timeout=5min"
+      "x-systemd.mount-timeout=30s"
     ];
   };
 
@@ -250,6 +252,7 @@ in
       "nofail"
       "x-systemd.automount"
       "x-systemd.idle-timeout=5min"
+      "x-systemd.mount-timeout=30s"
     ];
   };
 

@@ -11,6 +11,7 @@
       "/srv/appdata/sabnzbd"
       "/srv/appdata/sabnzbd/config"
     ];
+    requiredMounts = [ "/srv/content/data" ];
     extraTmpfiles = [
       # linuxserver/sabnzbd runs as the abc user (uid/gid 911) by default.
       "d /srv/appdata/sabnzbd/work 0775 911 911 - -"

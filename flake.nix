@@ -16,10 +16,10 @@
       url = "github:jacopone/antigravity-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    claude-desktop = {
-      url = "github:aaddrick/claude-desktop-debian";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    #claude-desktop = {
+    #  url = "github:aaddrick/claude-desktop-debian";
+    #  inputs.nixpkgs.follows = "nixpkgs";
+    #};
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -37,7 +37,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, dms, antigravity, claude-desktop, agenix, llm-agents, zen-browser, vscode-extensions, ... }@inputs:
+  outputs = { self, nixpkgs, nixpkgs-stable, home-manager, dms, antigravity, /*claude-desktop,*/ agenix, llm-agents, zen-browser, vscode-extensions, ... }@inputs:
     let
       system = "x86_64-linux";
       # VM-only overlay for Path of Building software rendering

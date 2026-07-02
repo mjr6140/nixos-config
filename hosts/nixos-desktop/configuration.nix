@@ -173,8 +173,9 @@ in
       unitConfig.X-OnlyManualStart = true;
     };
 
-  # Kernel (Latest stable)
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Kernel: keep Nvidia modules on the known-good 7.0 series instead of the
+  # moving latest series, which can outrun Nvidia's out-of-tree module support.
+  boot.kernelPackages = pkgs.linuxPackages_7_0;
 
   # SCX scheduler
   services.scx = {

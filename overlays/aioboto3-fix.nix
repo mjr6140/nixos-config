@@ -20,6 +20,26 @@ final: prev: {
               "test_dynamo_resource_waiter"
             ];
         });
+
+        click-threading = python-prev.click-threading.overridePythonAttrs (old: {
+          disabledTestPaths =
+            (old.disabledTestPaths or [ ])
+            ++ [
+              # TODO: Remove this workaround once nixpkgs/click-threading stops
+              # collecting docs/conf.py, which imports removed pkg_resources.
+              "docs/conf.py"
+            ];
+        });
+
+        fastmcp = python-prev.fastmcp.overridePythonAttrs (old: {
+          disabledTests =
+            (old.disabledTests or [ ])
+            ++ [
+              # TODO: Remove this workaround once nixpkgs/fastmcp's Supabase
+              # auth integration test no longer flakes waiting for its local server.
+              "test_unauthorized_access"
+            ];
+        });
       })
     ];
 }

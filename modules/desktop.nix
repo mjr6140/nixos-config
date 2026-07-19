@@ -6,7 +6,7 @@
 {
   nixpkgs.overlays = [
     inputs.vscode-extensions.overlays.default
-    inputs.llm-agents.overlays.default
+    inputs.llm-agents.overlays.shared-nixpkgs
     (import ../overlays/aioboto3-fix.nix)
     (import ../overlays/openldap-fix.nix)
   ];
@@ -60,8 +60,8 @@
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
     gnome-connections
-    epiphany  # GNOME Web
-    geary     # Email client (using Thunderbird)
+    epiphany # GNOME Web
+    geary # Email client (using Thunderbird)
   ];
 
   # Virtualisation & Containers
@@ -82,7 +82,7 @@
     openFirewall = true;
   };
   security.polkit.enable = true;
-  security.rtkit.enable = true;  # For PipeWire real-time priority
+  security.rtkit.enable = true; # For PipeWire real-time priority
   programs.nix-ld.enable = true;
 
   # For GSConnect (GNOME phone integration)

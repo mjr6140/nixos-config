@@ -108,14 +108,15 @@ in
 
   age.identityPaths = [ "/var/lib/agenix/identity" ];
   age.secrets =
-    lib.optionalAttrs (builtins.pathExists resticSecretFile) {
-      "restic-nixos-desktop.env" = {
-        file = resticSecretFile;
-        owner = "root";
-        group = "root";
-        mode = "0400";
-      };
-    }
+    lib.optionalAttrs (builtins.pathExists resticSecretFile)
+      {
+        "restic-nixos-desktop.env" = {
+          file = resticSecretFile;
+          owner = "root";
+          group = "root";
+          mode = "0400";
+        };
+      }
     // lib.optionalAttrs (builtins.pathExists resticSshKeyFile) {
       "restic-nixos-desktop-ssh" = {
         file = resticSshKeyFile;
@@ -126,32 +127,34 @@ in
     };
 
   services.restic.backups = lib.optionalAttrs
-    (builtins.pathExists resticSecretFile && builtins.pathExists resticSshKeyFile) {
-    nixos-desktop = {
-      environmentFile = config.age.secrets."restic-nixos-desktop.env".path;
-      paths = desktopResticPaths;
-      exclude = desktopResticExcludes;
-      initialize = true;
-      pruneOpts = desktopResticPruneOpts;
-      createWrapper = true;
-      extraOptions = [
-        "sftp.args='-i ${config.age.secrets."restic-nixos-desktop-ssh".path} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/root/.ssh/known_hosts'"
-      ];
-      timerConfig = null;
-      backupPrepareCommand = ''
-        #!${pkgs.runtimeShell}
-        for i in $(seq 1 30); do
-          ${ping} -c1 -W1 10.12.1.99 >/dev/null 2>&1 && exit 0
-          sleep 2
-        done
-        echo "Backup host unreachable" >&2
-        exit 1
-      '';
+    (builtins.pathExists resticSecretFile && builtins.pathExists resticSshKeyFile)
+    {
+      nixos-desktop = {
+        environmentFile = config.age.secrets."restic-nixos-desktop.env".path;
+        paths = desktopResticPaths;
+        exclude = desktopResticExcludes;
+        initialize = true;
+        pruneOpts = desktopResticPruneOpts;
+        createWrapper = true;
+        extraOptions = [
+          "sftp.args='-i ${config.age.secrets."restic-nixos-desktop-ssh".path} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new -o UserKnownHostsFile=/root/.ssh/known_hosts'"
+        ];
+        timerConfig = null;
+        backupPrepareCommand = ''
+          #!${pkgs.runtimeShell}
+          for i in $(seq 1 30); do
+            ${ping} -c1 -W1 10.12.1.99 >/dev/null 2>&1 && exit 0
+            sleep 2
+          done
+          echo "Backup host unreachable" >&2
+          exit 1
+        '';
+      };
     };
-  };
 
   systemd.services.restic-backups-desktop-window = lib.mkIf
-    (builtins.pathExists resticSecretFile && builtins.pathExists resticSshKeyFile) {
+    (builtins.pathExists resticSecretFile && builtins.pathExists resticSshKeyFile)
+    {
       description = "Desktop restic backup window";
       wants = [ "network-online.target" "restic-backups-nixos-desktop.service" ];
       after = [ "network-online.target" ];
@@ -163,7 +166,8 @@ in
     };
 
   systemd.timers.restic-backups-desktop-window = lib.mkIf
-    (builtins.pathExists resticSecretFile && builtins.pathExists resticSshKeyFile) {
+    (builtins.pathExists resticSecretFile && builtins.pathExists resticSshKeyFile)
+    {
       description = "Run desktop restic backup hourly";
       wantedBy = [ "timers.target" ];
       timerConfig = {
@@ -173,9 +177,9 @@ in
       unitConfig.X-OnlyManualStart = true;
     };
 
-  # Kernel: keep Nvidia modules on the known-good 7.0 series instead of the
-  # moving latest series, which can outrun Nvidia's out-of-tree module support.
-  boot.kernelPackages = pkgs.linuxPackages_7_0;
+  # Kernel: use latest with Nvidia production; beta 595.45.04 does not build
+  # against Linux 7.1 headers.
+  boot.kernelPackages = pkgs.linuxPackages_latest;
 
   # SCX scheduler
   services.scx = {
@@ -185,14 +189,15 @@ in
 
   # Graphics & Nvidia (desktop-specific)
   boot.blacklistedKernelModules = [ "nouveau" ];
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
     modesetting.enable = true;
     open = true;
     powerManagement.enable = true;
-    powerManagement.finegrained = false;  # Disable for desktop
+    powerManagement.kernelSuspendNotifier = false;
+    powerManagement.finegrained = false; # Disable for desktop
     nvidiaSettings = true;
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+    package = config.boot.kernelPackages.nvidiaPackages.production;
   };
   environment.sessionVariables = {
     GBM_BACKEND = "nvidia-drm";
@@ -206,10 +211,10 @@ in
   # Nvidia suspend/resume fixes
   # https://discourse.nixos.org/t/suspend-resume-cycling-on-system-resume/32322/10
   systemd = {
-     services."gnome-suspend" = {
+    services."gnome-suspend" = {
       description = "suspend gnome shell";
       before = [
-        "systemd-suspend.service" 
+        "systemd-suspend.service"
         "systemd-hibernate.service"
         "nvidia-suspend.service"
         "nvidia-hibernate.service"
@@ -226,7 +231,7 @@ in
     services."gnome-resume" = {
       description = "resume gnome shell";
       after = [
-        "systemd-suspend.service" 
+        "systemd-suspend.service"
         "systemd-hibernate.service"
         "nvidia-resume.service"
       ];

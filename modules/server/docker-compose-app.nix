@@ -21,14 +21,24 @@ let
       envDefaultsFile = pkgs.writeText "${name}.env.defaults" envDefaultsText;
       extraFileSources = builtins.attrValues instance.extraFiles;
       dockerCmd = lib.getExe config.virtualisation.docker.package;
+      flockCmd = lib.getExe' pkgs.util-linux "flock";
       composeCmd = "${dockerCmd} compose --project-name ${instance.projectName} --file ${composeFile}";
+      composeLockFile = "/run/lock/docker-compose-app-${name}.lock";
       presentSecretEnvFiles =
         builtins.filter (secretName: builtins.hasAttr secretName config.age.secrets) instance.secretEnvFiles;
       secretEnvPaths = map (secretName: config.age.secrets.${secretName}.path) presentSecretEnvFiles;
       composeUpScript = pkgs.writeShellScript "compose-up-${name}" ''
         set -euo pipefail
+        exec 9>${composeLockFile}
+        ${flockCmd} 9
         ${composeCmd} pull --ignore-pull-failures
         ${composeCmd} up -d --remove-orphans
+      '';
+      composeDownScript = pkgs.writeShellScript "compose-down-${name}" ''
+        set -euo pipefail
+        exec 9>${composeLockFile}
+        ${flockCmd} 9
+        ${composeCmd} down
       '';
       renderEnvScript = pkgs.writeShellScript "render-${name}-env" ''
         install -d -m 0755 ${composeDir}
@@ -70,7 +80,13 @@ let
 
         ${refreshServiceName} = lib.mkIf (presentSecretEnvFiles != [ ]) {
           description = "Refresh ${instance.description} after secret env changes";
-          after = [ "docker.service" "${envServiceName}.service" ];
+          after = [
+            "docker.service"
+            "network-online.target"
+            "${envServiceName}.service"
+            "${composeServiceName}.service"
+          ];
+          wants = [ "network-online.target" ];
           requires = [ "docker.service" "${envServiceName}.service" ];
           unitConfig = lib.optionalAttrs (instance.requiredMounts != [ ]) {
             RequiresMountsFor = instance.requiredMounts;
@@ -99,7 +115,7 @@ let
             RemainAfterExit = true;
             WorkingDirectory = composeDir;
             ExecStart = toString composeUpScript;
-            ExecStop = "${composeCmd} down";
+            ExecStop = toString composeDownScript;
             Restart = "on-failure";
             RestartSec = "30s";
             TimeoutStartSec = 0;

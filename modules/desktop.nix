@@ -1,7 +1,7 @@
 # Desktop environment configuration
 # Includes: GNOME, GDM, Niri, desktop services, desktop fonts, and
 # workstation-specific overlays
-{ config, pkgs, inputs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   nixpkgs.overlays = [
@@ -81,6 +81,12 @@
     nssmdns4 = true;
     openFirewall = true;
   };
+  # resolvconf sends Avahi SIGHUP while refreshing DNS. If both start in
+  # parallel, the signal can arrive before Avahi finishes initialization and
+  # terminate it, which also prevents cups-browsed from starting.
+  systemd.services.avahi-daemon.after = [ "resolvconf.service" ];
+  systemd.services.avahi-daemon.serviceConfig.ExecStartPre =
+    "+${lib.getExe' pkgs.coreutils "rm"} -f /run/avahi-daemon/pid";
   security.polkit.enable = true;
   security.rtkit.enable = true; # For PipeWire real-time priority
   programs.nix-ld.enable = true;

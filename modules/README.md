@@ -22,7 +22,7 @@ Desktop environment configuration:
 - Desktop fonts and overlays
 - Audio, graphics, and XDG portals
 - Desktop-adjacent services (printing, Avahi, libvirt, Docker)
-- Flatpak/Flathub setup
+- Flatpak application and repository setup
 - Gaming (Steam, GameMode)
 
 ### `server/default.nix`

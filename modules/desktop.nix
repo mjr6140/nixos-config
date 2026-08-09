@@ -103,7 +103,7 @@
   programs.steam.enable = true;
   programs.gamemode.enable = true;
 
-  # Flatpak & Flathub
+  # Flatpak applications and repositories
   services.flatpak.enable = true;
   systemd.services.flatpak-setup = {
     wantedBy = [ "multi-user.target" ];
@@ -112,7 +112,9 @@
     path = [ pkgs.flatpak ];
     script = ''
       flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      flatpak remote-add --if-not-exists orion-beta https://flatpak.orionbrowser.com/orion-beta.flatpakrepo
       flatpak install --system --noninteractive --or-update flathub community.pathofbuilding.PathOfBuilding
+      flatpak install --system --noninteractive --or-update orion-beta com.kagi.Orion
     '';
     serviceConfig = {
       Type = "oneshot";

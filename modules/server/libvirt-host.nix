@@ -2,10 +2,7 @@
 { pkgs, ... }:
 
 {
-  virtualisation.libvirtd = {
-    enable = true;
-    qemu.ovmf.enable = true;
-  };
+  virtualisation.libvirtd.enable = true;
 
   environment.systemPackages = with pkgs; [
     cloud-utils

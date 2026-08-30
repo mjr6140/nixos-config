@@ -69,6 +69,10 @@
         description: Network controller
 
 - Utilities:
+    - Hermes:
+        icon: mdi-robot
+        href: http://10.12.1.10:8642
+        description: AI agent dashboard
     - BookStack:
         icon: bookstack.png
         href: https://bookstack.undead.one

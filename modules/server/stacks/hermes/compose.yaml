@@ -1,0 +1,13 @@
+services:
+  hermes:
+    container_name: hermes
+    image: nousresearch/hermes-agent:latest
+    restart: unless-stopped
+    command: gateway run
+    env_file:
+      - /srv/compose/hermes/.env
+    volumes:
+      - /srv/appdata/hermes:/opt/data
+    ports:
+      - "8642:8642"
+      - "9119:9119"

@@ -10,6 +10,7 @@ in
   "pihole.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
   "caddy.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
   "karakeep.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
+  "hermes.env.age".publicKeys = [ matt nixosMinipc ];
   "gluetun.env.age".publicKeys = [ matt nixosMinipc nixosMinipcVm ];
   "restic-nixos-desktop.env.age".publicKeys = [ matt nixosDesktop ];
   "restic-nixos-desktop-ssh.age".publicKeys = [ matt nixosDesktop ];

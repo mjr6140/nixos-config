@@ -130,6 +130,7 @@ in
     ../../modules/server/stacks/arr
     ../../modules/server/stacks/caddy
     ../../modules/server/stacks/gluetun
+    ../../modules/server/stacks/hermes
     ../../modules/server/stacks/homepage
     ../../modules/server/stacks/jellyfin
     ../../modules/server/stacks/karakeep
@@ -165,6 +166,12 @@ in
     };
     "karakeep.env" = {
       file = ../../secrets/karakeep.env.age;
+      owner = "root";
+      group = "root";
+      mode = "0400";
+    };
+    "hermes.env" = {
+      file = ../../secrets/hermes.env.age;
       owner = "root";
       group = "root";
       mode = "0400";

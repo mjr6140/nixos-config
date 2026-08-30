@@ -13,6 +13,7 @@ Current secret files:
 - `pihole.env.age`: Pi-hole runtime env fragment
 - `caddy.env.age`: Caddy runtime env fragment
 - `karakeep.env.age`: Karakeep runtime env fragment
+- `hermes.env.age`: Hermes AI runtime env fragment
 - `gluetun.env.age`: Gluetun runtime env fragment
 - `restic-nixos-desktop.env.age`: Desktop restic repo config and password env
 - `restic-nixos-desktop-ssh.age`: Desktop restic SSH private key
@@ -57,6 +58,11 @@ NEXTAUTH_SECRET=
 NEXTAUTH_URL=
 MEILI_MASTER_KEY=
 OPENAI_API_KEY=
+
+# hermes.env.age
+HERMES_DASHBOARD=1
+HERMES_DASHBOARD_BASIC_AUTH_USERNAME=
+HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=
 
 # gluetun.env.age
 WIREGUARD_PRIVATE_KEY=

@@ -159,7 +159,10 @@ in
         autoconnect-priority = 100;
         autoconnect-ports = 1;
       };
-      bridge.stp = false;
+      bridge = {
+        stp = false;
+        mac-address = "84:47:09:1f:25:a6";
+      };
       ipv4.method = "auto";
       ipv6.method = "auto";
     };

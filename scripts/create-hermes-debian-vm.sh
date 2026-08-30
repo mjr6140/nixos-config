@@ -36,6 +36,7 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 NAME="hermes-debian"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 STORAGE_DIR=""
 DISK_SIZE_GB=100
 MEMORY_MB=8192
@@ -44,7 +45,7 @@ BRIDGE="br0"
 MAC_ADDRESS="52:54:00:12:01:42"
 INVOKING_USER="${SUDO_USER:-$USER}"
 INVOKING_HOME="$(getent passwd "$INVOKING_USER" | cut -d: -f6)"
-SSH_PUBKEY_PATH="${INVOKING_HOME}/.ssh/id_ed25519.pub"
+SSH_PUBKEY_PATH="${SCRIPT_DIR}/../keys/matt.pub"
 RECREATE=0
 DEBIAN_IMAGE_URL="https://cloud.debian.org/images/cloud/trixie/latest/debian-13-genericcloud-amd64.qcow2"
 

@@ -145,6 +145,40 @@ in
   networking.hostName = "nixos-minipc";
   networking.firewall.allowPing = true;
 
+  # Keep the Mini PC on DHCP while letting libvirt guests appear directly on
+  # the LAN. The existing NetworkManager profile UUID is captured here so its
+  # physical NIC becomes the br0 bridge port rather than a competing DHCP
+  # connection.
+  networking.networkmanager.ensureProfiles.profiles = {
+    br0 = {
+      connection = {
+        id = "br0";
+        interface-name = "br0";
+        type = "bridge";
+        autoconnect = true;
+        autoconnect-priority = 100;
+        autoconnect-ports = 1;
+      };
+      bridge.stp = false;
+      ipv4.method = "auto";
+      ipv6.method = "auto";
+    };
+    enp1s0 = {
+      connection = {
+        id = "Wired connection 1";
+        uuid = "0be5cda4-7f7e-3b7b-a87a-455cc1e040bb";
+        type = "ethernet";
+        interface-name = "enp1s0";
+        master = "br0";
+        slave-type = "bridge";
+        autoconnect = true;
+      };
+      ipv4.method = "disabled";
+      ipv6.method = "ignore";
+    };
+  };
+  networking.networkmanager.settings.main."no-auto-default" = "enp1s0";
+
   users.users.matt.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBlo4CgrsAdGMbal1HgyaUF8lFYol6DmXZgskdxFt776 mjr6140@gmail.com"
   ];

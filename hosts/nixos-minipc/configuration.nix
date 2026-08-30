@@ -177,6 +177,7 @@ in
       ipv6.method = "ignore";
     };
   };
+  networking.networkmanager.settings.main."no-auto-default" = "enp1s0";
 
   users.users.matt.openssh.authorizedKeys.keys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBlo4CgrsAdGMbal1HgyaUF8lFYol6DmXZgskdxFt776 mjr6140@gmail.com"

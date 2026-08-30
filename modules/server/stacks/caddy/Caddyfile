@@ -77,6 +77,11 @@
 		reverse_proxy http://host.docker.internal:3001
 	}
 
+	@hermes host hermes.undead.one
+	handle @hermes {
+		reverse_proxy http://host.docker.internal:9119
+	}
+
 	@jellyfin host jellyfin.undead.one
 	handle @jellyfin {
 		reverse_proxy http://host.docker.internal:8096

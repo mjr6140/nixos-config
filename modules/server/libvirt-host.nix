@@ -9,7 +9,7 @@
     curl
     libvirt
     qemu_kvm
-    virt-install
+    "virt-install"
   ];
 
   users.users.matt.extraGroups = [ "libvirtd" ];

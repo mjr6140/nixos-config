@@ -157,6 +157,7 @@ in
         type = "bridge";
         autoconnect = true;
         autoconnect-priority = 100;
+        autoconnect-ports = 1;
       };
       bridge.stp = false;
       ipv4.method = "auto";

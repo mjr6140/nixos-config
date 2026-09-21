@@ -128,16 +128,6 @@ in
     ../../modules/server/docker-compose-app.nix
     ../../modules/server/libvirt-host.nix
     ../../modules/server/observability-host.nix
-    ../../modules/server/stacks/arr
-    ../../modules/server/stacks/caddy
-    ../../modules/server/stacks/gluetun
-    ../../modules/server/stacks/hermes
-    ../../modules/server/stacks/homepage
-    ../../modules/server/stacks/jellyfin
-    ../../modules/server/stacks/karakeep
-    ../../modules/server/stacks/omada
-    ../../modules/server/stacks/pihole
-    ../../modules/server/stacks/sabnzbd
     ../../modules/server/default.nix
     ../../modules/server/packages.nix
   ];
